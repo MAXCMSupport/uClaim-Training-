@@ -1,0 +1,3341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>uClaim App Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B3A6B;
+  --navy-dark: #122850;
+  --navy-light: #254d8f;
+  --blue: #4A90C4;
+  --blue-light: #6BADD4;
+  --blue-pale: #E8F2FA;
+  --white: #ffffff;
+  --gray-50: #F8FAFC;
+  --gray-100: #F1F5F9;
+  --gray-200: #E2E8F0;
+  --gray-300: #CBD5E1;
+  --gray-500: #64748B;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-900: #0F172A;
+  --green: #22C55E;
+  --red: #EF4444;
+  --orange: #F59E0B;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(27,58,107,0.10);
+  --shadow-lg: 0 8px 40px rgba(27,58,107,0.16);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-700);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.app-header {
+  background: var(--navy);
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-logo { height: 44px; object-fit: contain; }
+.header-title {
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 500;
+  opacity: 0.75;
+  letter-spacing: 0.3px;
+}
+
+/* ── MODE TOGGLE ── */
+.mode-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.mode-tab {
+  padding: 16px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-500);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  letter-spacing: 0.2px;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.mode-tab:hover { color: var(--navy); }
+.mode-tab.active { color: var(--navy); border-bottom-color: var(--blue); }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 12px 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.progress-track {
+  flex: 1;
+  height: 8px;
+  background: var(--gray-200);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--navy), var(--blue));
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+.progress-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  min-width: 80px;
+  text-align: right;
+}
+.section-dots {
+  display: flex;
+  gap: 8px;
+}
+.section-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--gray-200);
+  color: var(--gray-500);
+  border: 2px solid transparent;
+}
+.section-dot.done { background: var(--green); color: var(--white); }
+.section-dot.active { background: var(--navy); color: var(--white); border-color: var(--blue); }
+
+/* ── MAIN LAYOUT ── */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ── TUTORIAL VIEW ── */
+.tutorial-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--blue-pale);
+  color: var(--navy);
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.section-badge-num {
+  background: var(--navy);
+  color: var(--white);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ── SECTION CARD ── */
+.section-panel {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+.section-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  padding: 28px 36px;
+  color: var(--white);
+}
+.section-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.section-header p {
+  opacity: 0.78;
+  font-size: 14px;
+  max-width: 560px;
+  line-height: 1.5;
+}
+.section-body {
+  padding: 36px;
+}
+
+/* ── CONTENT BLOCKS ── */
+.step-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--navy);
+  color: var(--white);
+  padding: 4px 12px 4px 4px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: 0.4px;
+}
+.step-label-num {
+  background: var(--blue);
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+}
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .content-grid { grid-template-columns: 1fr; }
+  .app-header { padding: 0 20px; }
+  .mode-bar { padding: 0 16px; }
+  .progress-wrap { padding: 12px 16px; }
+  .main { padding: 24px 16px 60px; }
+  .section-body { padding: 24px 20px; }
+  .section-header { padding: 24px 20px; }
+}
+
+.content-text h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+.content-text p {
+  font-size: 14px;
+  color: var(--gray-600);
+  margin-bottom: 14px;
+  line-height: 1.65;
+}
+
+.field-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.field-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--gray-700);
+}
+.field-list li::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+.field-group {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.field-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+.callout {
+  background: linear-gradient(135deg, #FFF7ED, #FFEDD5);
+  border-left: 4px solid var(--orange);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 20px 0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.callout p { font-size: 13.5px; color: #92400E; line-height: 1.5; margin: 0; font-weight: 500; }
+
+.tip {
+  background: var(--blue-pale);
+  border-left: 4px solid var(--blue);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-size: 13.5px;
+  color: var(--navy);
+  line-height: 1.5;
+}
+
+/* ── PHONE FRAME ── */
+.phone-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 8px 0;
+}
+.phone-frame {
+  width: 270px;
+  background: #1a1a2e;
+  border-radius: 42px;
+  padding: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.08);
+  position: relative;
+  flex-shrink: 0;
+}
+.phone-notch {
+  width: 90px;
+  height: 22px;
+  background: #111;
+  border-radius: 0 0 16px 16px;
+  margin: 0 auto 8px;
+  position: relative;
+}
+.phone-notch::after {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+  background: #222;
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  border: 1px solid #333;
+}
+.phone-screen {
+  background: #f5f5f5;
+  border-radius: 28px;
+  overflow: hidden;
+  height: 480px;
+  position: relative;
+}
+.phone-screen-inner {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.phone-screen-inner::-webkit-scrollbar { display: none; }
+.phone-status {
+  background: var(--navy);
+  padding: 8px 16px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: white;
+  font-weight: 600;
+}
+.phone-app-bar {
+  background: var(--navy);
+  padding: 10px 14px 12px;
+  color: white;
+}
+.phone-app-bar h4 {
+  font-size: 13px;
+  font-weight: 700;
+}
+.phone-app-bar p {
+  font-size: 10px;
+  opacity: 0.7;
+  margin-top: 1px;
+}
+.phone-content {
+  padding: 12px;
+  background: #f5f5f5;
+}
+.phone-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--navy);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+/* Phone form elements */
+.phone-field {
+  margin-bottom: 10px;
+}
+.phone-field label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gray-600);
+  display: block;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.phone-select, .phone-input, .phone-textarea {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-family: inherit;
+  color: var(--gray-700);
+  cursor: pointer;
+  appearance: none;
+  transition: border-color 0.2s;
+}
+.phone-select:focus, .phone-input:focus, .phone-textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+}
+.phone-select-wrap {
+  position: relative;
+}
+.phone-select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: var(--gray-500);
+  pointer-events: none;
+}
+.phone-textarea { height: 52px; resize: none; }
+.phone-btn {
+  width: 100%;
+  background: var(--navy);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+.phone-btn:hover { background: var(--navy-light); }
+.phone-btn.secondary {
+  background: var(--white);
+  color: var(--navy);
+  border: 1.5px solid var(--navy);
+  margin-top: 6px;
+}
+.phone-btn.blue { background: var(--blue); }
+
+/* Phone doc checklist */
+.phone-doc-item {
+  background: var(--white);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+}
+.phone-doc-name { font-size: 10px; font-weight: 600; color: var(--gray-700); margin-bottom: 5px; }
+.phone-doc-options {
+  display: flex;
+  gap: 4px;
+}
+.phone-doc-opt {
+  flex: 1;
+  text-align: center;
+  padding: 4px 2px;
+  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--gray-200);
+  background: var(--gray-50);
+  color: var(--gray-600);
+  transition: all 0.15s;
+}
+.phone-doc-opt.selected-na { background: var(--gray-200); color: var(--gray-700); border-color: var(--gray-300); }
+.phone-doc-opt.selected-req { background: #FEF3C7; color: #92400E; border-color: #FCD34D; }
+.phone-doc-opt.selected-rec { background: #DCFCE7; color: #166534; border-color: #86EFAC; }
+
+/* Phone area selector */
+.phone-area-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+.phone-area-card {
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gray-700);
+  transition: all 0.15s;
+}
+.phone-area-card:hover { border-color: var(--blue); color: var(--navy); }
+.phone-area-card.selected { background: var(--blue-pale); border-color: var(--blue); color: var(--navy); }
+.phone-area-card .area-icon { font-size: 18px; display: block; margin-bottom: 3px; }
+
+/* Phone yes/no */
+.phone-yn-item {
+  background: var(--white);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+}
+.phone-yn-q { font-size: 10px; color: var(--gray-700); margin-bottom: 5px; line-height: 1.35; }
+.phone-yn-btns { display: flex; gap: 5px; }
+.phone-yn-btn {
+  flex: 1;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid var(--gray-200);
+  background: var(--gray-50);
+  color: var(--gray-600);
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.phone-yn-btn.yes.active { background: #DCFCE7; color: #166534; border-color: #86EFAC; }
+.phone-yn-btn.no.active { background: #FEE2E2; color: #991B1B; border-color: #FCA5A5; }
+
+/* Phone nav tabs */
+.phone-tabs {
+  display: flex;
+  background: #eee;
+  border-radius: 8px;
+  padding: 2px;
+  margin-bottom: 10px;
+}
+.phone-tab {
+  flex: 1;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--gray-600);
+  transition: all 0.2s;
+}
+.phone-tab.active { background: var(--white); color: var(--navy); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+/* Photo/video row */
+.phone-media-row {
+  display: flex;
+  gap: 5px;
+  margin-top: 4px;
+}
+.phone-media-btn {
+  flex: 1;
+  background: var(--white);
+  border: 1.5px dashed var(--gray-300);
+  border-radius: 7px;
+  padding: 8px 4px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 9px;
+  color: var(--gray-500);
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.phone-media-btn:hover { border-color: var(--blue); color: var(--navy); }
+.phone-media-btn .media-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+
+/* ── QUIZ ── */
+.quiz-wrap {
+  background: linear-gradient(135deg, var(--gray-50), var(--blue-pale));
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 28px;
+  margin-top: 32px;
+}
+.quiz-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.quiz-title::before {
+  content: '✦';
+  color: var(--blue);
+  font-size: 14px;
+}
+.quiz-subtitle {
+  font-size: 13px;
+  color: var(--gray-500);
+  margin-bottom: 24px;
+}
+.quiz-q {
+  margin-bottom: 22px;
+}
+.quiz-q-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.quiz-q-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.quiz-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.18s;
+  font-size: 13.5px;
+  color: var(--gray-700);
+  text-align: left;
+}
+.quiz-opt:hover:not(.locked) { border-color: var(--blue); background: var(--blue-pale); color: var(--navy); }
+.quiz-opt.correct { border-color: var(--green); background: #F0FDF4; color: #166534; }
+.quiz-opt.wrong { border-color: var(--red); background: #FEF2F2; color: #991B1B; }
+.quiz-opt.locked { cursor: default; }
+.opt-letter {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--gray-200);
+  color: var(--gray-600);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.18s;
+}
+.quiz-opt.correct .opt-letter { background: var(--green); color: white; }
+.quiz-opt.wrong .opt-letter { background: var(--red); color: white; }
+.quiz-feedback {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  display: none;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+.quiz-feedback.wrong { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+
+/* ── COMPLETE BUTTON ── */
+.complete-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 24px;
+  transition: all 0.2s;
+  font-family: inherit;
+  box-shadow: 0 4px 16px rgba(27,58,107,0.25);
+}
+.complete-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(27,58,107,0.3); }
+.complete-btn:disabled { background: var(--green); cursor: default; transform: none; }
+.complete-btn.done { background: linear-gradient(135deg, #16a34a, #22c55e); }
+
+.section-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 36px;
+  border-top: 1px solid var(--gray-100);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ── NAV BUTTONS ── */
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: inherit;
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-700);
+}
+.nav-btn:hover { border-color: var(--navy); color: var(--navy); }
+.nav-btn.primary {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+.nav-btn.primary:hover { background: var(--navy-light); }
+.nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── REFERENCE LIBRARY ── */
+.ref-intro {
+  text-align: center;
+  padding: 32px 0 24px;
+}
+.ref-intro h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.ref-intro p {
+  font-size: 15px;
+  color: var(--gray-500);
+  max-width: 480px;
+  margin: 0 auto;
+}
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 8px;
+}
+.ref-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+.ref-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--blue); }
+.ref-card-header {
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.ref-card-num {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+.ref-card-title { color: white; }
+.ref-card-title h3 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.ref-card-title p { font-size: 12px; opacity: 0.7; line-height: 1.35; }
+.ref-card-body {
+  padding: 16px 20px;
+}
+.ref-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.ref-tag {
+  background: var(--blue-pale);
+  color: var(--navy);
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.ref-card-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.ref-status-done { color: var(--green); font-weight: 600; }
+.ref-status-pending { color: var(--gray-400); font-weight: 600; }
+.ref-open-btn {
+  background: var(--navy);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.ref-open-btn:hover { background: var(--navy-light); }
+
+/* Modal for reference view */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box {
+  background: var(--white);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+  transform: translateY(20px);
+  transition: transform 0.25s;
+}
+.modal-overlay.open .modal-box { transform: translateY(0); }
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.modal-close:hover { background: rgba(255,255,255,0.25); }
+.modal-header-wrap { position: relative; }
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: var(--gray-200);
+  margin: 28px 0;
+}
+
+/* ── FOOTER ── */
+.app-footer {
+  background: var(--navy-dark);
+  color: rgba(255,255,255,0.55);
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+}
+.app-footer a { color: var(--blue-light); text-decoration: none; }
+
+/* ── COURSE ── */
+.map-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.16); color: #fff;
+  padding: 5px 12px; border-radius: 99px;
+  font-size: 11.5px; font-weight: 600; margin-top: 12px;
+}
+.lesson-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.back-link {
+  background: none; border: none; color: var(--navy);
+  font-weight: 600; font-size: 14px; cursor: pointer;
+  font-family: inherit; padding: 8px 14px; border-radius: 8px;
+  transition: background 0.18s;
+}
+.back-link:hover { background: var(--blue-pale); color: var(--navy); }
+.ref-tag.map { background: var(--navy); color: #fff; }
+.ref-tag.gk { background: var(--gray-200); color: var(--gray-700); }
+.course-progress {
+  display: flex; align-items: center; gap: 16px;
+  max-width: 760px; margin: 0 auto 28px;
+}
+.course-cat {
+  font-size: 13px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--navy);
+  margin: 28px 0 12px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--blue-pale);
+}
+.lesson-reading { max-width: 780px; margin: 0 auto; }
+
+/* ── AUTH / LOGIN ── */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.login-card {
+  background: #fff; border-radius: 18px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+  width: 100%; max-width: 380px; padding: 36px 32px; text-align: center;
+}
+.login-logo { height: 46px; object-fit: contain; margin-bottom: 10px; }
+.login-card h2 { font-size: 20px; color: var(--navy); font-weight: 800; margin-bottom: 4px; }
+.login-card p.sub { font-size: 13px; color: var(--gray-500); margin-bottom: 24px; }
+.login-field { text-align: left; margin-bottom: 14px; }
+.login-field label { display: block; font-size: 12px; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; }
+.login-field input {
+  width: 100%; border: 1.5px solid var(--gray-200); border-radius: 9px;
+  padding: 11px 13px; font-size: 14px; font-family: inherit; color: var(--gray-700);
+}
+.login-field input:focus { outline: none; border-color: var(--blue); }
+.login-btn {
+  width: 100%; background: var(--navy); color: #fff; border: none; border-radius: 9px;
+  padding: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+  margin-top: 6px; transition: background 0.2s;
+}
+.login-btn:hover { background: var(--navy-light); }
+.login-error {
+  display: none; background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA;
+  border-radius: 8px; padding: 9px 12px; font-size: 13px; margin-bottom: 14px;
+}
+.login-hint { margin-top: 18px; font-size: 11.5px; color: var(--gray-500); line-height: 1.5; }
+
+/* header user area */
+.header-right { display: flex; align-items: center; gap: 14px; }
+.user-chip { color: #fff; font-size: 13px; font-weight: 600; opacity: 0.92; }
+.logout-btn {
+  background: rgba(255,255,255,0.14); color: #fff; border: none; border-radius: 7px;
+  padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: inherit; transition: background 0.2s;
+}
+.logout-btn:hover { background: rgba(255,255,255,0.26); }
+
+/* ── ADMIN DASHBOARD ── */
+.admin-section { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; margin-bottom: 24px; }
+.admin-section h3 { font-size: 17px; color: var(--navy); font-weight: 700; margin-bottom: 16px; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.admin-table th {
+  text-align: left; padding: 10px 12px; background: var(--blue-pale); color: var(--navy);
+  font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px;
+}
+.admin-table td { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); color: var(--gray-700); }
+.admin-table tr:hover td { background: var(--gray-50); }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.pill.admin { background: #FEF3C7; color: #92400E; }
+.pill.standard { background: var(--blue-pale); color: var(--navy); }
+.mini-btn {
+  background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 6px;
+  padding: 4px 10px; font-size: 12px; font-weight: 600; cursor: pointer;
+  font-family: inherit; color: var(--gray-700); transition: all 0.15s; margin: 2px 2px;
+}
+.mini-btn:hover { border-color: var(--navy); color: var(--navy); }
+.mini-btn.danger:hover { border-color: var(--red); color: var(--red); }
+.admin-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; align-items: end; }
+.admin-form .login-field { margin-bottom: 0; }
+.score-bar { height: 7px; background: var(--gray-200); border-radius: 99px; overflow: hidden; width: 80px; display: inline-block; vertical-align: middle; margin-right: 8px; }
+.score-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--navy), var(--blue)); }
+.perm-check { width: 18px; height: 18px; cursor: pointer; accent-color: var(--navy); }
+
+/* Utility */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.mt-4 { margin-top: 16px; }
+.mb-4 { margin-bottom: 16px; }
+.flex { display: flex; }
+.gap-2 { gap: 8px; }
+.items-center { align-items: center; }
+.flex-wrap { flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <img src="uclaim-logo.jpg" alt="uClaim" class="header-logo">
+  <div class="header-right">
+    <span class="header-title">App Training Guide</span>
+    <span class="user-chip hidden" id="user-chip"></span>
+    <button class="logout-btn hidden" id="logout-btn" onclick="logout()">Log out</button>
+  </div>
+</header>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-card">
+    <img src="uclaim-logo.jpg" alt="uClaim" class="login-logo">
+    <h2>Training Portal</h2>
+    <p class="sub">Sign in to start your training</p>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-field">
+      <label>Username</label>
+      <input id="login-user" type="text" autocomplete="username" onkeydown="if(event.key==='Enter')attemptLogin()">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input id="login-pass" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')attemptLogin()">
+    </div>
+    <button class="login-btn" onclick="attemptLogin()">Sign In</button>
+    <p class="login-hint">Don't have an account? Ask your administrator to create one for you.</p>
+  </div>
+</div>
+
+<!-- MODE TOGGLE -->
+<div class="mode-bar">
+  <button class="mode-tab active" id="tab-tutorial" onclick="switchMode('tutorial')">📋 Guided Tutorial</button>
+  <button class="mode-tab" id="tab-reference" onclick="switchMode('reference')">📚 Reference Library</button>
+  <button class="mode-tab" id="tab-course" onclick="switchMode('course')">🎓 Loss Adjusting Course</button>
+  <button class="mode-tab hidden" id="tab-admin" onclick="switchMode('admin')">🛠 Admin</button>
+</div>
+
+<!-- PROGRESS BAR (tutorial only) -->
+<div class="progress-wrap" id="progress-wrap">
+  <div class="section-dots" id="section-dots"></div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+  <div class="progress-label" id="progress-label">0% done</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TUTORIAL VIEW -->
+  <div id="view-tutorial">
+    <div class="tutorial-nav">
+      <div class="section-badge">
+        <span class="section-badge-num" id="tutorial-num">1</span>
+        <span id="tutorial-section-name">Site Inspection Checklist</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="nav-btn" id="btn-prev" onclick="tutorialNav(-1)">← Previous</button>
+        <button class="nav-btn primary" id="btn-next" onclick="tutorialNav(1)">Next →</button>
+      </div>
+    </div>
+    <div id="tutorial-content"></div>
+  </div>
+
+  <!-- REFERENCE VIEW -->
+  <div id="view-reference" class="hidden">
+    <div class="ref-intro">
+      <h2>Reference Library</h2>
+      <p>Jump to any section for a quick refresher. All six modules at a glance.</p>
+    </div>
+    <div class="ref-grid" id="ref-grid"></div>
+  </div>
+
+  <!-- COURSE VIEW -->
+  <div id="view-course" class="hidden">
+    <div id="course-content"></div>
+  </div>
+
+  <!-- ADMIN VIEW -->
+  <div id="view-admin" class="hidden">
+    <div id="admin-content"></div>
+  </div>
+</div>
+
+<!-- MODAL (reference view) -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-box" id="modal-box">
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="app-footer">
+  Built for uClaim &nbsp;|&nbsp; Maximillian Hornby &nbsp;|&nbsp; <a href="mailto:max@cmsupport.co.za">max@cmsupport.co.za</a>
+</footer>
+
+<script>
+// ── STATE ──
+const TOTAL_SECTIONS = 6;
+let currentSection = 0; // 0-indexed
+let mode = 'tutorial';
+
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem('uclaim_progress__' + currentUsername()) || '{}'); } catch(e) { return {}; }
+}
+function saveProgress(p) {
+  localStorage.setItem('uclaim_progress__' + currentUsername(), JSON.stringify(p));
+}
+function isComplete(i) { return !!loadProgress()[i]; }
+function markComplete(i) {
+  const p = loadProgress(); p[i] = true; saveProgress(p);
+  updateProgressBar();
+  renderSectionDots();
+}
+// Toggle: marks complete, or un-marks if already complete
+function toggleComplete(i) {
+  const p = loadProgress();
+  if (p[i]) delete p[i]; else p[i] = true;
+  saveProgress(p);
+  const done = !!p[i];
+  const btn = document.getElementById('complete-btn-' + i);
+  if (btn) {
+    btn.classList.toggle('done', done);
+    btn.innerHTML = done ? (i === TOTAL_SECTIONS - 1 ? '🎉 Training Complete!' : '✓ Section Complete') : '✦ Mark as Complete';
+  }
+  renderSectionDots();
+  updateProgressBar();
+}
+function getCompletedCount() {
+  const p = loadProgress();
+  return Object.values(p).filter(Boolean).length;
+}
+
+// ── SECTIONS DATA ──
+const sections = [
+  { title: 'Site Inspection Checklist', short: 'Checklist', tags: ['Dropdowns','Documents','On-site'] },
+  { title: 'Damaged Buildings', short: 'Buildings', tags: ['Buildings','Areas','Damage'] },
+  { title: 'Damaged Assets', short: 'Assets', tags: ['Assets','Movable','Immovable'] },
+  { title: 'Executive Summary', short: 'Summary', tags: ['Site Questions','Narrative','Key Section'] },
+  { title: 'VAR Property', short: 'VAR', tags: ['Value at Risk','Perimeter','Areas','VAR Indicator'] },
+  { title: 'Extra Documents', short: 'Documents', tags: ['Client Docs','Uploads'] },
+];
+
+// ── PROGRESS BAR ──
+function updateProgressBar() {
+  const count = getCompletedCount();
+  const pct = Math.round((count / TOTAL_SECTIONS) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = pct + '% done';
+}
+
+function renderSectionDots() {
+  const wrap = document.getElementById('section-dots');
+  wrap.innerHTML = '';
+  sections.forEach((s, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'section-dot' + (isComplete(i) ? ' done' : '') + (i === currentSection && mode === 'tutorial' ? ' active' : '');
+    dot.textContent = isComplete(i) ? '✓' : (i + 1);
+    dot.title = s.title;
+    dot.onclick = () => { currentSection = i; renderTutorial(); };
+    wrap.appendChild(dot);
+  });
+}
+
+// ── PHONE HELPERS ──
+function phoneFrame(screenHtml) {
+  return `<div class="phone-wrap">
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="phone-screen-inner">
+          <div class="phone-status"><span>9:41</span><span>📶 🔋</span></div>
+          ${screenHtml}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── QUIZ BUILDER ──
+function buildQuiz(sectionIndex, questions) {
+  let html = `<div class="quiz-wrap" id="quiz-${sectionIndex}">
+    <div class="quiz-title">Knowledge Check</div>
+    <div class="quiz-subtitle">Test your understanding before moving on.</div>`;
+
+  questions.forEach((q, qi) => {
+    html += `<div class="quiz-q" id="qq-${sectionIndex}-${qi}">
+      <div class="quiz-q-num">Question ${qi+1} of ${questions.length}</div>
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-options">`;
+    q.opts.forEach((opt, oi) => {
+      const letter = ['A','B','C','D'][oi];
+      html += `<button class="quiz-opt" onclick="answerQuiz(${sectionIndex},${qi},${oi},${q.correct})" id="qo-${sectionIndex}-${qi}-${oi}">
+        <span class="opt-letter">${letter}</span>${opt}
+      </button>`;
+    });
+    html += `</div>
+      <div class="quiz-feedback" id="qf-${sectionIndex}-${qi}"></div>
+    </div>`;
+  });
+
+  html += `</div>`;
+  return html;
+}
+
+const quizData = [
+  // Section 1
+  [ { q: 'What are the three options available for each item in the Document Checklist?',
+      opts: ['Yes / No / Pending', 'Not Applicable / Requested / Received', 'Complete / Incomplete / Missing', 'Found / Damaged / Destroyed'],
+      correct: 1,
+      feedback: { c: 'Correct. Each document can be marked Not Applicable, Requested, or Received — making it easy to track what you\'ve asked for and what you\'ve actually got.', w: 'Not quite. The three options are Not Applicable, Requested, and Received.' } },
+    { q: 'Which of the following is NOT one of the dropdown categories in the Site Checklist?',
+      opts: ['Security', 'Flooring', 'Plumbing', 'Construction'],
+      correct: 2,
+      feedback: { c: 'Correct. Plumbing is not a dropdown category. The checklist covers Area Type, Security, Building, Construction, Flooring, and Roof.', w: 'Not quite. Plumbing is the correct answer — it\'s not one of the six dropdown categories.' } },
+    { q: 'What does the Site Inspection Checklist section primarily capture?',
+      opts: ['Financial values of damaged items', 'The overall look and feel of the site and required documents', 'A list of all assets on the premises', 'The cause of the loss event'],
+      correct: 1,
+      feedback: { c: 'Correct. Section 1 gives a high-level picture of the site type, structure, and which key documents have been requested or received.', w: 'Not quite. Section 1 focuses on the overall site characteristics and document tracking.' } }
+  ],
+  // Section 2
+  [ { q: 'What must be completed before you can add areas to a building in Section 2?',
+      opts: ['The Executive Summary', 'The Building Details (Step 1)', 'The Asset section', 'The Document Checklist'],
+      correct: 1,
+      feedback: { c: 'Correct. The building must be set up first — areas are linked to it and can only be added once the building record exists.', w: 'The building details must be completed first. Areas drill down from the building record.' } },
+    { q: 'Which of the following is an OUTDOOR area option in Section 2?',
+      opts: ['Conference Room', 'Bedroom', 'Loading Docks', 'Kitchen'],
+      correct: 2,
+      feedback: { c: 'Correct. Loading Docks is an outdoor area. Conference Room, Bedroom, and Kitchen are all indoor options.', w: 'Loading Docks is the outdoor option. The others are all indoor areas.' } },
+    { q: 'If you find damage in an area, what should you do to ensure a contractor can quote accurately?',
+      opts: ['Only photograph the damage', 'Note it clearly in the video and Description Box with measurements', 'Send a separate email to the assessor', 'Leave it for the VAR section'],
+      correct: 1,
+      feedback: { c: 'Correct. Clear video notes and a detailed description with measurements give contractors everything they need to provide an accurate quote.', w: 'You should note damage clearly in the video and Description Box with measurements.' } }
+  ],
+  // Section 3
+  [ { q: 'What types of assets are documented in Section 3 — Damaged Assets?',
+      opts: ['Assets inside buildings', 'Movable and immovable assets NOT inside a building', 'Contents covered under a separate policy', 'Only mechanical equipment'],
+      correct: 1,
+      feedback: { c: 'Correct. Section 3 is specifically for assets that exist outside of a building structure — think Jojo Tanks, generators, solar panels.', w: 'Section 3 documents assets that are NOT inside a building — for example a Jojo Tank or generator.' } },
+    { q: 'Which of the following would typically be captured in Section 3?',
+      opts: ['Damaged kitchen tiles', 'A generator and solar panel array', 'Office furniture inside a building', 'Roof damage to a structure'],
+      correct: 1,
+      feedback: { c: 'Correct. A generator and solar panels are standalone assets outside the building — exactly what Section 3 is designed to capture.', w: 'The generator and solar panels are the right answer. Building damage goes in Section 2.' } },
+    { q: 'Which field in Section 3 helps identify ownership and insurance verification?',
+      opts: ['Asset Condition', 'Area Name', 'Asset Serial / VIN Number', 'Building Type'],
+      correct: 2,
+      feedback: { c: 'Correct. The Serial or VIN number is critical for verification and links the asset to ownership records and insurance documentation.', w: 'The Asset Serial / VIN Number is used for identification and insurance verification.' } }
+  ],
+  // Section 4
+  [ { q: 'What makes the Executive Summary one of the most important sections?',
+      opts: ['It captures asset values', 'It describes what happened and identifies professionals who may be needed', 'It lists all damaged areas', 'It generates the VAR automatically'],
+      correct: 1,
+      feedback: { c: 'Correct. The Executive Summary is your narrative — it tells the story of the event and flags what specialist input may be required.', w: 'The Executive Summary describes what happened and identifies what professionals may be needed.' } },
+    { q: 'In Step 2 — Inspection Information, how are responses captured?',
+      opts: ['Dropdown selections', 'Yes / No toggle buttons', 'Typed text fields in your own words', 'Auto-generated from other sections'],
+      correct: 2,
+      feedback: { c: 'Correct. Step 2 is all typed text — you\'re writing your own detailed narrative of the event and damage observed.', w: 'Step 2 uses typed text fields — you describe the event and findings in your own words.' } },
+    { q: 'Which tool is specifically recommended for completing the Executive Summary?',
+      opts: ['The camera zoom', 'Voice Notes for the Desktop Assessor to review', 'GPS coordinates', 'Automated damage calculator'],
+      correct: 1,
+      feedback: { c: 'Correct. Voice Notes are highly recommended here — they let you capture rich detail on-site that the Desktop Assessor can review later.', w: 'Voice Notes are the recommended tool for the Executive Summary.' } }
+  ],
+  // Section 5
+  [ { q: 'VAR Property works in two parts. Which part is the "base" that must be completed before you can add areas?',
+      opts: ['The Areas', 'The Perimeter', 'The Executive Summary', 'The Document Checklist'],
+      correct: 1,
+      feedback: { c: 'Correct. The Perimeter is your base — it must be completed first, then you drill down into Areas.', w: 'The Perimeter is the base and must be completed before adding any Areas.' } },
+    { q: 'In the Areas step, the Area Name is chosen from a list of building descriptions that do what?',
+      opts: ['Describe the damage only', 'Match directly to the VAR Indicator calculation', 'List the documents required', 'Record the cause of loss'],
+      correct: 1,
+      feedback: { c: 'Correct. Each Area Name maps directly to the VAR Indicator, so the right match means an accurate replacement-cost figure.', w: 'The building descriptions match directly to the VAR Indicator calculation.' } },
+    { q: 'Which set of options is the Value Range used for the Perimeter and each Area?',
+      opts: ['Good / Fair / Poor', 'Small / Medium / Large', 'Lower / Middle / Upper / Executive', 'Bronze / Silver / Gold'],
+      correct: 2,
+      feedback: { c: 'Correct. The Value Range is Lower, Middle, Upper or Executive — the quality bracket of the build.', w: 'The Value Range options are Lower, Middle, Upper and Executive.' } }
+  ],
+  // Section 6
+  [ { q: 'What types of documents belong in Section 6 — Extra Documents?',
+      opts: ['Internal app-generated reports', 'Documents handed to you on site by the client', 'Photographs of damage', 'Insurance policy schedules from head office'],
+      correct: 1,
+      feedback: { c: 'Correct. Section 6 is for any documents the client hands to you on site — quotations, COCs, permits, maintenance records, etc.', w: 'Section 6 is for documents handed to you by the client on site.' } },
+    { q: 'Why is it important to name each document clearly in Section 6?',
+      opts: ['So the app can auto-categorise them', 'So the Desktop Assessor can identify and use each document without confusion', 'It\'s optional — names don\'t matter', 'So they are excluded from the final report'],
+      correct: 1,
+      feedback: { c: 'Correct. Clear naming means the Desktop Assessor can quickly find and use the right document without having to open everything to identify it.', w: 'Clear naming helps the Desktop Assessor identify and use documents efficiently.' } }
+  ]
+];
+
+function answerQuiz(si, qi, chosen, correct) {
+  const opts = document.querySelectorAll(`#qq-${si}-${qi} .quiz-opt`);
+  opts.forEach((el, i) => {
+    el.classList.add('locked');
+    if (i === correct) el.classList.add('correct');
+    else if (i === chosen && i !== correct) el.classList.add('wrong');
+  });
+  const fb = document.getElementById(`qf-${si}-${qi}`);
+  const isRight = chosen === correct;
+  fb.className = 'quiz-feedback show ' + (isRight ? 'correct' : 'wrong');
+  fb.innerHTML = (isRight ? '✓ ' : '✗ ') + (isRight ? quizData[si][qi].feedback.c : quizData[si][qi].feedback.w);
+  recordQuiz('tut', si, qi, isRight);
+}
+
+// ── SECTION HTML BUILDERS ──
+function buildSection1() {
+  return `
+  <div class="section-panel">
+    <div class="section-header">
+      <h2>Section 1 — Site Inspection Checklist</h2>
+      <p>This section captures the overall look and feel of the site and tracks all required documents. It has two steps.</p>
+    </div>
+    <div class="section-body">
+      <div class="step-label"><span class="step-label-num">1</span> Site Checklist — Dropdown Selections</div>
+      <div class="content-grid">
+        <div class="content-text">
+          <h3>What you're capturing</h3>
+          <p>Six dropdown categories give a structured snapshot of the property. Select the option that best describes what you observe on site.</p>
+          <div class="field-group">
+            <div class="field-group-title">Area Type</div>
+            <ul class="field-list">
+              <li>Agricultural</li><li>Commercial</li><li>Industrial</li><li>Residential</li><li>Other</li>
+            </ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">Security</div>
+            <ul class="field-list">
+              <li>No. of External Doors</li><li>Monitored Alarm</li><li>Burglar Guards</li><li>CCTV</li><li>Security Doors</li><li>Beams</li><li>Perimeter Fencing</li><li>Access Control</li><li>Other</li>
+            </ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">Building</div>
+            <ul class="field-list"><li>Single Story</li><li>Double Story</li><li>Multi Story</li><li>Other</li></ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">Construction</div>
+            <ul class="field-list"><li>Brick &amp; Plaster</li><li>Face Brick</li><li>Prefabricated Concrete</li><li>Steel</li><li>Timber</li><li>Stone</li><li>Other</li></ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">Flooring</div>
+            <ul class="field-list"><li>Tiles</li><li>Fitted Carpets</li><li>Timber</li><li>Vinyl</li><li>Laminate</li><li>Concrete</li><li>Skirtings</li><li>Other</li></ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">Roof</div>
+            <ul class="field-list"><li>Concrete Slab</li><li>Concrete Tiles</li><li>IBR</li><li>Asbestos</li><li>NuTec Roof Sheeting</li><li>Slate</li><li>Corrugated Metal</li><li>Harvey Tile</li><li>Thatch</li><li>Timber</li><li>Other</li></ul>
+          </div>
+        </div>
+        ${phoneFrame(`
+          <div class="phone-app-bar"><h4>Site Inspection Checklist</h4><p>Step 1 of 2 — Site Checklist</p></div>
+          <div class="phone-content">
+            <div class="phone-section-title">Site Checklist</div>
+            <div class="phone-field">
+              <label>Area Type</label>
+              <div class="phone-select-wrap">
+                <select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                  <option value="">Select...</option>
+                  <option>Agricultural</option><option>Commercial</option><option>Industrial</option><option>Residential</option><option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="phone-field">
+              <label>Building</label>
+              <div class="phone-select-wrap">
+                <select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                  <option value="">Select...</option>
+                  <option>Single Story</option><option>Double Story</option><option>Multi Story</option><option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="phone-field">
+              <label>Construction</label>
+              <div class="phone-select-wrap">
+                <select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                  <option value="">Select...</option>
+                  <option>Brick &amp; Plaster</option><option>Face Brick</option><option>Prefabricated Concrete</option><option>Steel</option><option>Timber</option><option>Stone</option><option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="phone-field">
+              <label>Roof</label>
+              <div class="phone-select-wrap">
+                <select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                  <option value="">Select...</option>
+                  <option>Concrete Slab</option><option>Concrete Tiles</option><option>IBR</option><option>Asbestos</option><option>NuTec Roof Sheeting</option><option>Slate</option><option>Corrugated Metal</option><option>Harvey Tile</option><option>Thatch</option><option>Timber</option><option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="phone-field">
+              <label>Flooring</label>
+              <div class="phone-select-wrap">
+                <select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                  <option value="">Select...</option>
+                  <option>Tiles</option><option>Fitted Carpets</option><option>Timber</option><option>Vinyl</option><option>Laminate</option><option>Concrete</option><option>Other</option>
+                </select>
+              </div>
+            </div>
+            <button class="phone-btn blue" onclick="this.textContent='✓ Saved'; this.style.background='#22c55e'">Save &amp; Continue →</button>
+          </div>
+        `)}
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="step-label"><span class="step-label-num">2</span> Document Checklist — Track Required Documents</div>
+      <div class="content-grid">
+        <div class="content-text">
+          <h3>Three states per document</h3>
+          <p>Each document in the checklist has exactly three options. Tap the appropriate status for each one based on what the client has provided or what you've requested.</p>
+          <div class="field-group">
+            <div class="field-group-title">Status Options</div>
+            <ul class="field-list">
+              <li><strong>Not Applicable</strong> — not relevant to this claim</li>
+              <li><strong>Requested</strong> — you've asked for it but haven't received it yet</li>
+              <li><strong>Received</strong> — you have the document in hand</li>
+            </ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">Documents to Track</div>
+            <ul class="field-list">
+              <li>Electricity Certificate of Compliance</li>
+              <li>Fire Department Report</li>
+              <li>List of Fire Equipment</li>
+              <li>Maintenance/Service Records (12 months)</li>
+              <li>Rational Fire Design</li>
+              <li>Security Contracts</li>
+              <li>Incident Register (12–24 months)</li>
+              <li>Documented Inventory Control Policy</li>
+              <li>Latest Loss Report</li>
+              <li>Maintenance Records</li>
+              <li>Roof Drawing</li>
+              <li>Police Report</li>
+              <li>Alarm Activity Report</li>
+            </ul>
+          </div>
+          <div class="tip">💡 Even if a document isn't available on site, mark it as <strong>Requested</strong> so the Desktop Assessor knows to follow up.</div>
+        </div>
+        ${phoneFrame(`
+          <div class="phone-app-bar"><h4>Site Inspection Checklist</h4><p>Step 2 of 2 — Documents</p></div>
+          <div class="phone-content">
+            <div class="phone-section-title">Document Checklist</div>
+            ${[
+              'Electricity CoC',
+              'Fire Dept Report',
+              'Fire Equipment List',
+              'Maintenance Records',
+              'Police Report',
+              'Alarm Activity Report'
+            ].map((doc, i) => `
+            <div class="phone-doc-item">
+              <div class="phone-doc-name">${doc}</div>
+              <div class="phone-doc-options">
+                <div class="phone-doc-opt" onclick="selectDocOpt(this, 'na')">N/A</div>
+                <div class="phone-doc-opt" onclick="selectDocOpt(this, 'req')">Requested</div>
+                <div class="phone-doc-opt" onclick="selectDocOpt(this, 'rec')">Received</div>
+              </div>
+            </div>`).join('')}
+            <button class="phone-btn" onclick="this.textContent='✓ Checklist Saved'; this.style.background='#22c55e'" style="margin-top:8px">Save Checklist</button>
+          </div>
+        `)}
+      </div>
+
+      ${buildQuiz(0, quizData[0])}
+    </div>
+    <div class="section-footer">
+      <div style="font-size:13px;color:var(--gray-500)">Complete the knowledge check above, then mark this section done.</div>
+      <button class="complete-btn ${isComplete(0)?'done':''}" id="complete-btn-0" onclick="toggleComplete(0)">
+        ${isComplete(0) ? '✓ Section Complete' : '✦ Mark as Complete'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function buildSection2() {
+  return `
+  <div class="section-panel">
+    <div class="section-header">
+      <h2>Section 2 — Damaged Buildings</h2>
+      <p>This section documents the property and all visible damage. It works in two steps — first the building, then the areas inside or outside it. The building must be completed before you can add areas.</p>
+    </div>
+    <div class="section-body">
+      <div class="step-label"><span class="step-label-num">1</span> Building Details</div>
+      <div class="content-grid">
+        <div class="content-text">
+          <h3>Complete the building record first</h3>
+          <p>All areas are linked to a parent building. Fill in the building details before drilling down into specific rooms or outdoor zones.</p>
+          <div class="field-group">
+            <div class="field-group-title">Required Fields</div>
+            <ul class="field-list">
+              <li>Name</li>
+              <li>Building Type</li>
+              <li>Roof Type</li>
+              <li>Building Use</li>
+              <li>Building Size (m²)</li>
+              <li>Security</li>
+              <li>Building Condition</li>
+              <li>Short description of existing building</li>
+              <li>Is there damage to the building? (Yes / No)</li>
+              <li>Damage m²</li>
+              <li>Photos</li>
+              <li>Videos</li>
+              <li>Voice Notes</li>
+            </ul>
+          </div>
+          <div class="tip">💡 Always capture a walkthrough video of the full building exterior before going inside. This establishes context for the Desktop Assessor.</div>
+        </div>
+        ${phoneFrame(`
+          <div class="phone-app-bar"><h4>Damaged Buildings</h4><p>Step 1 — Building Details</p></div>
+          <div class="phone-content">
+            <div class="phone-section-title">Building Details</div>
+            <div class="phone-field"><label>Building Name</label><input class="phone-input" placeholder="e.g. Main Warehouse" onclick="this.style.borderColor='#4A90C4'"></div>
+            <div class="phone-field"><label>Building Type</label>
+              <div class="phone-select-wrap"><select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                <option>Select type...</option><option>Warehouse</option><option>Office</option><option>Residential</option><option>Retail</option><option>Industrial</option>
+              </select></div>
+            </div>
+            <div class="phone-field"><label>Building Size (m²)</label><input class="phone-input" type="number" placeholder="0" onclick="this.style.borderColor='#4A90C4'"></div>
+            <div class="phone-field"><label>Building Condition</label>
+              <div class="phone-select-wrap"><select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                <option>Select...</option><option>Good</option><option>Fair</option><option>Poor</option>
+              </select></div>
+            </div>
+            <div class="phone-field"><label>Damage to Building?</label>
+              <div class="phone-yn-btns">
+                <button class="phone-yn-btn yes" onclick="this.classList.add('active'); this.nextElementSibling.classList.remove('active')">Yes</button>
+                <button class="phone-yn-btn no" onclick="this.classList.add('active'); this.previousElementSibling.classList.remove('active')">No</button>
+              </div>
+            </div>
+            <div class="phone-field"><label>Media</label>
+              <div class="phone-media-row">
+                <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'; this.innerHTML='<span class=\\'media-icon\\'>📷</span>Added'"><span class="media-icon">📷</span>Photos</div>
+                <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'; this.innerHTML='<span class=\\'media-icon\\'>🎬</span>Added'"><span class="media-icon">🎬</span>Video</div>
+                <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'; this.innerHTML='<span class=\\'media-icon\\'>🎙️</span>Added'"><span class="media-icon">🎙️</span>Voice</div>
+              </div>
+            </div>
+            <button class="phone-btn" onclick="this.textContent='✓ Building Saved'; this.style.background='#22c55e'">Save Building →</button>
+          </div>
+        `)}
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="step-label"><span class="step-label-num">2</span> Areas — Drill Down from the Building</div>
+      <div class="content-grid">
+        <div class="content-text">
+          <h3>Indoor and Outdoor areas</h3>
+          <p>Once the building is saved, add individual areas. Choose Indoor or Outdoor, then select the specific area type from the list.</p>
+          <div class="field-group">
+            <div class="field-group-title">Indoor Areas (examples)</div>
+            <ul class="field-list">
+              <li>Basement, Bathroom, Bedroom</li>
+              <li>Break Room / Kitchenette, Closets</li>
+              <li>Conference Room, Cubicle / Workstation</li>
+              <li>Dining Room, Executive Office, Garage</li>
+              <li>Hallways, Inventory Storage, Kitchen</li>
+              <li>Laundry Room, Living Room, and more</li>
+            </ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">Outdoor Areas (examples)</div>
+            <ul class="field-list">
+              <li>Backyard, Basement Parking, Deck</li>
+              <li>Dog Run / Enclosure, Driveway</li>
+              <li>Emergency Exit, Front Entrance, Front Yard</li>
+              <li>Garden, Gate, Landscaped Area</li>
+              <li>Loading Docks, and more</li>
+            </ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">Per Area — Capture</div>
+            <ul class="field-list">
+              <li>Area Name</li>
+              <li>Area Condition (Good / Fair / Poor)</li>
+              <li>Description</li>
+              <li>Damage m²</li>
+              <li>Photos, Videos, Voice Notes</li>
+            </ul>
+          </div>
+          <div class="callout">
+            <span class="callout-icon">⚠️</span>
+            <p>If there is damage in an area, note it clearly in the video and Description Box with measurements so a contractor can quote accurately.</p>
+          </div>
+        </div>
+        ${phoneFrame(`
+          <div class="phone-app-bar"><h4>Damaged Buildings</h4><p>Step 2 — Areas</p></div>
+          <div class="phone-content">
+            <div class="phone-tabs">
+              <div class="phone-tab active" onclick="phoneTabSwitch(this, 'indoor-areas', 'outdoor-areas')">Indoor</div>
+              <div class="phone-tab" onclick="phoneTabSwitch(this, 'outdoor-areas', 'indoor-areas')">Outdoor</div>
+            </div>
+            <div id="indoor-areas">
+              <div class="phone-section-title">Select Indoor Area</div>
+              <div class="phone-area-grid">
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🛁</span>Bathroom</div>
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🛏️</span>Bedroom</div>
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🍳</span>Kitchen</div>
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🏢</span>Office</div>
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">📦</span>Storage</div>
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🚗</span>Garage</div>
+              </div>
+            </div>
+            <div id="outdoor-areas" class="hidden">
+              <div class="phone-section-title">Select Outdoor Area</div>
+              <div class="phone-area-grid">
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🌿</span>Garden</div>
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🚪</span>Front Entrance</div>
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🚛</span>Loading Dock</div>
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🅿️</span>Parking</div>
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🛤️</span>Driveway</div>
+                <div class="phone-area-card" onclick="selectArea(this, 'area-form-2')"><span class="area-icon">🏊</span>Deck</div>
+              </div>
+            </div>
+            <div id="area-form-2" class="hidden" style="margin-top:4px">
+              <div class="phone-section-title">Area Details</div>
+              <div class="phone-field"><label>Area Condition</label>
+                <div class="phone-select-wrap"><select class="phone-select"><option>Good</option><option>Fair</option><option>Poor</option></select></div>
+              </div>
+              <div class="phone-field"><label>Description of Damage</label><textarea class="phone-textarea" placeholder="Describe damage with measurements..."></textarea></div>
+              <div class="phone-field"><label>Damage m²</label><input class="phone-input" type="number" placeholder="0"></div>
+              <div class="phone-field"><label>Media</label>
+                <div class="phone-media-row">
+                  <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'"><span class="media-icon">📷</span>Photos</div>
+                  <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'"><span class="media-icon">🎬</span>Video</div>
+                  <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'"><span class="media-icon">🎙️</span>Voice</div>
+                </div>
+              </div>
+              <button class="phone-btn" onclick="this.textContent='✓ Area Saved'; this.style.background='#22c55e'">Save Area</button>
+            </div>
+          </div>
+        `)}
+      </div>
+
+      ${buildQuiz(1, quizData[1])}
+    </div>
+    <div class="section-footer">
+      <div style="font-size:13px;color:var(--gray-500)">Complete the knowledge check above, then mark this section done.</div>
+      <button class="complete-btn ${isComplete(1)?'done':''}" id="complete-btn-1" onclick="toggleComplete(1)">
+        ${isComplete(1) ? '✓ Section Complete' : '✦ Mark as Complete'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function buildSection3() {
+  return `
+  <div class="section-panel">
+    <div class="section-header">
+      <h2>Section 3 — Damaged Assets</h2>
+      <p>This section documents immovable and movable assets that are NOT inside a building — for example a Jojo Tank, generator, or solar panel array.</p>
+    </div>
+    <div class="section-body">
+      <div class="content-grid">
+        <div class="content-text">
+          <h3>What counts as an asset here?</h3>
+          <p>Section 3 is specifically for standalone assets that exist outside any building structure. If it's inside a building, it belongs in Section 2. If it stands alone — it goes here.</p>
+          <div class="field-group">
+            <div class="field-group-title">Common Examples</div>
+            <ul class="field-list">
+              <li>Jojo Tanks / Water storage</li>
+              <li>Generators</li>
+              <li>Solar panel arrays</li>
+              <li>External HVAC units</li>
+              <li>Standalone machinery</li>
+              <li>Vehicles / Plant equipment</li>
+            </ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">Fields to Capture</div>
+            <ul class="field-list">
+              <li>Name</li>
+              <li>Sub Category</li>
+              <li>Description</li>
+              <li>Asset Use (Commercial / Personal)</li>
+              <li>Asset Value</li>
+              <li>Asset Serial / VIN Number</li>
+              <li>Security (Access Control, CCTV, Locked, Tracking)</li>
+              <li>Asset Condition (Good / Fair / Poor)</li>
+              <li>Photos, Videos, Voice Notes</li>
+            </ul>
+          </div>
+          <div class="tip">💡 The Serial or VIN number is critical — it links the physical asset to ownership records and insurance documentation. Always try to capture it.</div>
+          <div class="callout">
+            <span class="callout-icon">⚠️</span>
+            <p>Asset Value should reflect the current replacement value, not the original purchase price. If unsure, note this in the Description and flag for the Desktop Assessor.</p>
+          </div>
+        </div>
+        ${phoneFrame(`
+          <div class="phone-app-bar"><h4>Damaged Assets</h4><p>Asset Capture</p></div>
+          <div class="phone-content">
+            <div class="phone-section-title">New Asset</div>
+            <div class="phone-field"><label>Asset Name</label><input class="phone-input" placeholder="e.g. 5000L Jojo Tank" onclick="this.style.borderColor='#4A90C4'"></div>
+            <div class="phone-field"><label>Sub Category</label>
+              <div class="phone-select-wrap"><select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                <option>Select...</option><option>Water Storage</option><option>Generator</option><option>Solar</option><option>Machinery</option><option>Vehicle</option><option>Other</option>
+              </select></div>
+            </div>
+            <div class="phone-field"><label>Asset Use</label>
+              <div class="phone-yn-btns">
+                <button class="phone-yn-btn yes" onclick="this.classList.add('active'); this.nextElementSibling.classList.remove('active'); this.textContent='✓ Commercial'">Commercial</button>
+                <button class="phone-yn-btn no" onclick="this.classList.add('active'); this.previousElementSibling.classList.remove('active'); this.textContent='✓ Personal'">Personal</button>
+              </div>
+            </div>
+            <div class="phone-field"><label>Serial / VIN Number</label><input class="phone-input" placeholder="Enter serial number" onclick="this.style.borderColor='#4A90C4'"></div>
+            <div class="phone-field"><label>Asset Condition</label>
+              <div class="phone-select-wrap"><select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                <option>Select...</option><option>Good</option><option>Fair</option><option>Poor</option>
+              </select></div>
+            </div>
+            <div class="phone-field"><label>Asset Value (R)</label><input class="phone-input" type="number" placeholder="0.00" onclick="this.style.borderColor='#4A90C4'"></div>
+            <div class="phone-field"><label>Description</label><textarea class="phone-textarea" placeholder="Describe asset and damage..."></textarea></div>
+            <div class="phone-field"><label>Media</label>
+              <div class="phone-media-row">
+                <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'; this.innerHTML='<span class=\\'media-icon\\'>📷</span>Added'"><span class="media-icon">📷</span>Photos</div>
+                <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'; this.innerHTML='<span class=\\'media-icon\\'>🎬</span>Added'"><span class="media-icon">🎬</span>Video</div>
+                <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'; this.innerHTML='<span class=\\'media-icon\\'>🎙️</span>Added'"><span class="media-icon">🎙️</span>Voice</div>
+              </div>
+            </div>
+            <button class="phone-btn" onclick="this.textContent='✓ Asset Saved'; this.style.background='#22c55e'">Save Asset</button>
+          </div>
+        `)}
+      </div>
+
+      ${buildQuiz(2, quizData[2])}
+    </div>
+    <div class="section-footer">
+      <div style="font-size:13px;color:var(--gray-500)">Complete the knowledge check above, then mark this section done.</div>
+      <button class="complete-btn ${isComplete(2)?'done':''}" id="complete-btn-2" onclick="toggleComplete(2)">
+        ${isComplete(2) ? '✓ Section Complete' : '✦ Mark as Complete'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function buildSection4() {
+  const yesNoQs = [
+    'Do you agree with the assigned status of the building?',
+    'Are other professionals required to assess the building?',
+    'Can access be gained to all areas of the site?',
+    'Is there visible damage to the building?',
+    'Is there visible damage to equipment and/or other movable assets?',
+    'Does the site location match the claim form?',
+    'Are emergency repairs required?',
+    'Is third party recovery required?',
+    'Is salvage required?'
+  ];
+  return `
+  <div class="section-panel">
+    <div class="section-header">
+      <h2>Section 4 — Executive Summary</h2>
+      <p>One of the most important sections. Describes what happened at the site, professional requirements, and your expert observations. Two steps.</p>
+    </div>
+    <div class="section-body">
+      <div class="step-label"><span class="step-label-num">1</span> Site Questions — Yes / No with Comments</div>
+      <div class="content-grid">
+        <div class="content-text">
+          <h3>Nine structured questions</h3>
+          <p>Each question gets a Yes or No answer. Where relevant, add a comment to explain your reasoning — especially if your answer might surprise the Desktop Assessor.</p>
+          <div class="field-group">
+            <div class="field-group-title">Site Questions</div>
+            <ul class="field-list">
+              ${yesNoQs.map(q => `<li>${q}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="tip">💡 "Are other professionals required?" is particularly important — flag engineers, fire investigators, quantity surveyors, or other specialists here.</div>
+        </div>
+        ${phoneFrame(`
+          <div class="phone-app-bar"><h4>Executive Summary</h4><p>Step 1 — Site Questions</p></div>
+          <div class="phone-content">
+            <div class="phone-section-title">Site Questions</div>
+            ${yesNoQs.slice(0,4).map(q => `
+            <div class="phone-yn-item">
+              <div class="phone-yn-q">${q}</div>
+              <div class="phone-yn-btns">
+                <button class="phone-yn-btn yes" onclick="ynToggle(this,'yes')">Yes</button>
+                <button class="phone-yn-btn no" onclick="ynToggle(this,'no')">No</button>
+              </div>
+            </div>`).join('')}
+            <div style="text-align:center;color:var(--gray-400);font-size:10px;padding:4px 0">↓ Scroll for more questions</div>
+            <button class="phone-btn blue" style="margin-top:8px">Continue to Step 2 →</button>
+          </div>
+        `)}
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="step-label"><span class="step-label-num">2</span> Inspection Information — Your Expert Narrative</div>
+      <div class="content-grid">
+        <div class="content-text">
+          <h3>Typed text — in your own words</h3>
+          <p>This is where your professional judgement goes on the record. No dropdowns — write clearly and thoroughly. The Desktop Assessor relies on this section to understand the full picture.</p>
+          <div class="field-group">
+            <div class="field-group-title">Five Narrative Fields</div>
+            <ul class="field-list">
+              <li><strong>Description of Risk</strong> — type of risk, industry, occupancy</li>
+              <li><strong>Description of Asset &amp; Site</strong> — describe the building or site and its main use</li>
+              <li><strong>When did the event take place?</strong> — Date and Time</li>
+              <li><strong>What caused the loss?</strong> — describe in your own words</li>
+              <li><strong>Damage observed on site</strong> — what you personally saw</li>
+            </ul>
+          </div>
+          <div class="callout">
+            <span class="callout-icon">⚠️</span>
+            <p>Complete this section in as much detail as possible. You are welcome to use Voice Notes here for the Desktop Assessor to review.</p>
+          </div>
+        </div>
+        ${phoneFrame(`
+          <div class="phone-app-bar"><h4>Executive Summary</h4><p>Step 2 — Inspection Information</p></div>
+          <div class="phone-content">
+            <div class="phone-section-title">Inspection Information</div>
+            <div class="phone-field"><label>Description of Risk</label><textarea class="phone-textarea" placeholder="Type of risk, industry, occupancy..." onclick="this.style.borderColor='#4A90C4'"></textarea></div>
+            <div class="phone-field"><label>Description of Asset &amp; Site</label><textarea class="phone-textarea" placeholder="Describe building or site and its main use..." onclick="this.style.borderColor='#4A90C4'"></textarea></div>
+            <div class="phone-field"><label>When did the event take place?</label><input class="phone-input" placeholder="Date &amp; Time of event" onclick="this.style.borderColor='#4A90C4'"></div>
+            <div class="phone-field"><label>Cause of Loss</label><textarea class="phone-textarea" placeholder="Describe the event that caused the loss..." onclick="this.style.borderColor='#4A90C4'"></textarea></div>
+            <div class="phone-field"><label>Damage Observed</label><textarea class="phone-textarea" placeholder="Describe damage you observed on site..." onclick="this.style.borderColor='#4A90C4'"></textarea></div>
+            <div class="phone-field"><label>Voice Notes</label>
+              <div class="phone-media-row">
+                <div class="phone-media-btn" style="flex:2" onclick="this.style.background='#E8F2FA'; this.innerHTML='<span class=\\'media-icon\\'>🎙️</span>Recording added'"><span class="media-icon">🎙️</span>Add Voice Note</div>
+              </div>
+            </div>
+            <button class="phone-btn" onclick="this.textContent='✓ Summary Saved'; this.style.background='#22c55e'">Save Summary</button>
+          </div>
+        `)}
+      </div>
+
+      ${buildQuiz(3, quizData[3])}
+    </div>
+    <div class="section-footer">
+      <div style="font-size:13px;color:var(--gray-500)">Complete the knowledge check above, then mark this section done.</div>
+      <button class="complete-btn ${isComplete(3)?'done':''}" id="complete-btn-3" onclick="toggleComplete(3)">
+        ${isComplete(3) ? '✓ Section Complete' : '✦ Mark as Complete'}
+      </button>
+    </div>
+  </div>`;
+}
+
+// VAR Property — Area Name options (building descriptions that match the VAR Indicator).
+// Stored as supplied; rendered alphabetically wherever they appear.
+const varAreaNames = [
+  'Administration office within Industrial','Industrial',
+  'Air-conditioning - Hospitals Central plant','Air-conditioning - Hotels Central plant',
+  'Air-conditioning - Hotels Console units','Air-conditioning - Hotels Public Areas',
+  'Air-conditioning - Hotels Split Units','Air-conditioning - Offices Central Plant',
+  'Air-conditioning - Offices Console units','Air-conditioning - Offices Console /split units',
+  'Air-conditioning - Offices Package units','Air-conditioning - Residential split units',
+  'Air-conditioning - Shopping Centers Evaporative cooling','Air-conditioning - Shopping Centers Packaging units',
+  'Air-conditioning - Shopping Centers Split units','Aircraft docking system',
+  'Cold storage facilities','Community centers','Conference center','Local convenience centers',
+  'Low-cost housing','Minor regional centres','Neighbourhood centres','Parking in basement',
+  'Parking in semi-basement','Parking on grade','Perimeter fencing / security gates','RDP housing',
+  'Regional centers','Structured parking','Super regional centers','Telescopic air bridges',
+  'Terminal buildings','UPS / substations / standby generators','Ventilation to parking / service areas',
+  'Airport parking','Apron stands – Code E','Apron stands – Code C','Apron stands – Code F',
+  'Budget hotel','District hotel','Luxury hotel (5-Star)','Mid-scale hotel (3-star)',
+  'Primary school','Secondary school','Upper scale hotel (4-star)','Building services',
+  'Carport (covered) - Double','Carport (covered) - Single','Carport (shaded) - Double','Carport (shaded) - Single',
+  'Commercial/Office','Duplex Townhouse - Economic','Education',
+  'Electrical installation – Hospitals','Electrical installation – Hotels','Electrical installation – Offices',
+  'Electrical installation – Residential','Electrical installation – Shopping centres',
+  'Electronic installation – Hospitals','Electronic installation – Hotels','Electronic installation – Offices',
+  'Electronic installation – Residential','Electronic installation – Shopping centres',
+  'Fire protection – Hospitals','Fire protection – Offices','Fire protection – Shopping centres',
+  'Healthcare','High-rise tower','Hospitals – operating theatres','Hotels','Industrial warehouse',
+  'Low-rise office park','Outbuilding','Parking','Apartment block','Prison – 1,000 inmates',
+  'Prison – 500 inmates','Prison – high / maximum security','Private dwelling house','Recreation',
+  'Retail','Retail – local convenience centres','Retirement centre – apartment block',
+  'Retirement centre – community centre','Retirement centre – dwelling houses','Retirement centre – frail care',
+  'Runway – Code F','Service road – dual carriage','Service road – standard','Site services – low-cost housing',
+  'Specialized building','Stadium – FIFA standards','Stadium – PSL standards','Stadium pitch – FIFA standard',
+  'Student residential high-rise tower block','Studios – dancing / art exhibition',
+  'Swimming pool – exceeding 50kL and not exceeding 100kL','Swimming pool – not exceeding 50kL',
+  'Taxi lane – Code C','Taxi lane – Code E','Taxi lane – Code F'
+];
+function sortedVarAreaNames() { return [...varAreaNames].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' })); }
+
+function buildSection5() {
+  const areaOpts = sortedVarAreaNames().map(n => `<option>${n}</option>`).join('');
+  const areaListItems = sortedVarAreaNames().map(n => `<li>${n}</li>`).join('');
+  return `
+  <div class="section-panel">
+    <div class="section-header">
+      <h2>Section 5 — VAR Property (Value at Risk)</h2>
+      <p>Documents the Value at Risk for the property. It works in two parts — first the Perimeter, then the Areas. Each area is chosen from a list of building descriptions that match directly to the VAR Indicator calculation.</p>
+    </div>
+    <div class="section-body">
+      <div class="tip" style="margin-bottom:24px">💡 <strong>Why this matters:</strong> The descriptions you select feed directly into uClaim's Big Data system to generate an automatic, high-level replacement-cost figure — the <strong>VAR Indicator</strong>. Choosing the building description that best matches what you see on site is what makes the calculation accurate — no manual estimation required.</div>
+
+      <div class="step-label"><span class="step-label-num">1</span> Perimeter — Your Base</div>
+      <div class="content-grid">
+        <div class="content-text">
+          <h3>Start with the perimeter</h3>
+          <p>The Perimeter is the base of this section. You must complete it before you can add any Areas. If a site has more than one perimeter, capture each one.</p>
+          <div class="field-group">
+            <div class="field-group-title">Perimeter Fields</div>
+            <ul class="field-list">
+              <li><strong>Perimeter Type</strong> — Brick &amp; Mortar, Pre-Cast, Wood, Palisade Steel, Palisade Concrete, Open Street Front, Wire Fence</li>
+              <li><strong>Entrance Type</strong> — Manual Sliding Gate, Motorised Sliding Gate, Open Entrance, Boom Gates, Other</li>
+              <li><strong>Security</strong> (select all that apply) — Electric Fencing, Access Control, Perimeter CCTV, Razor Wire, None</li>
+              <li><strong>Perimeter Value Range</strong> — Lower, Middle, Upper, Executive</li>
+              <li><strong>Perimeter m²</strong></li>
+              <li><strong>Layout of Yard</strong></li>
+              <li><strong>Short Description of existing perimeter</strong></li>
+              <li>Photos, Videos &amp; Voice Notes</li>
+            </ul>
+          </div>
+          <div class="tip">💡 The <strong>Value Range</strong> (Lower / Middle / Upper / Executive) tells the VAR Indicator the quality bracket of the build — pick the one that best reflects the finishes and standard you see on site.</div>
+        </div>
+        ${phoneFrame(`
+          <div class="phone-app-bar"><h4>VAR Property</h4><p>Step 1 — Perimeter</p></div>
+          <div class="phone-content">
+            <div class="phone-tabs">
+              <div class="phone-tab active" onclick="phoneTabSwitch(this,'var-perimeter','var-areas')">Perimeter</div>
+              <div class="phone-tab" onclick="phoneTabSwitch(this,'var-areas','var-perimeter')">Areas</div>
+            </div>
+            <div id="var-perimeter">
+              <div class="phone-section-title">Perimeter</div>
+              <div class="phone-field"><label>Perimeter Type</label>
+                <div class="phone-select-wrap"><select class="phone-select"><option>Select...</option><option>Brick &amp; Mortar</option><option>Pre-Cast</option><option>Wood</option><option>Palisade Steel</option><option>Palisade Concrete</option><option>Open Street Front</option><option>Wire Fence</option></select></div>
+              </div>
+              <div class="phone-field"><label>Entrance Type</label>
+                <div class="phone-select-wrap"><select class="phone-select"><option>Select...</option><option>Manual Sliding Gate</option><option>Motorised Sliding Gate</option><option>Open Entrance</option><option>Boom Gates</option><option>Other</option></select></div>
+              </div>
+              <div class="phone-field"><label>Security (select all that apply)</label>
+                <div class="phone-media-row" style="flex-wrap:wrap">
+                  <div class="phone-media-btn" onclick="this.classList.toggle('on');this.style.background=this.classList.contains('on')?'#DCFCE7':'#fff'">Electric Fencing</div>
+                  <div class="phone-media-btn" onclick="this.classList.toggle('on');this.style.background=this.classList.contains('on')?'#DCFCE7':'#fff'">Access Control</div>
+                  <div class="phone-media-btn" onclick="this.classList.toggle('on');this.style.background=this.classList.contains('on')?'#DCFCE7':'#fff'">Perimeter CCTV</div>
+                  <div class="phone-media-btn" onclick="this.classList.toggle('on');this.style.background=this.classList.contains('on')?'#DCFCE7':'#fff'">Razor Wire</div>
+                  <div class="phone-media-btn" onclick="this.classList.toggle('on');this.style.background=this.classList.contains('on')?'#DCFCE7':'#fff'">None</div>
+                </div>
+              </div>
+              <div class="phone-field"><label>Perimeter Value Range</label>
+                <div class="phone-select-wrap"><select class="phone-select"><option>Select...</option><option>Lower</option><option>Middle</option><option>Upper</option><option>Executive</option></select></div>
+              </div>
+              <div class="phone-field"><label>Perimeter m²</label><input class="phone-input" placeholder="e.g. 1 200" onclick="this.style.borderColor='#4A90C4'"></div>
+              <div class="phone-field"><label>Layout of Yard</label><textarea class="phone-textarea" placeholder="Describe the yard layout..."></textarea></div>
+              <div class="phone-field"><label>Short Description</label><textarea class="phone-textarea" placeholder="Describe existing perimeter..."></textarea></div>
+              <div class="phone-field"><label>Media</label>
+                <div class="phone-media-row">
+                  <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'"><span class="media-icon">📷</span>Photos</div>
+                  <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'"><span class="media-icon">🎬</span>Video</div>
+                  <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'"><span class="media-icon">🎙️</span>Voice</div>
+                </div>
+              </div>
+              <button class="phone-btn blue" onclick="this.textContent='✓ Saved'; this.style.background='#22c55e'">Save Perimeter →</button>
+            </div>
+            <div id="var-areas" class="hidden">
+              <div class="phone-section-title">Step 2 — Add Area</div>
+              <div class="phone-field"><label>Area Name (searchable)</label>
+                <div class="phone-select-wrap"><select class="phone-select"><option>Search &amp; select...</option>${areaOpts}</select></div>
+              </div>
+              <div class="phone-field"><label>Building Size m²</label><input class="phone-input" placeholder="e.g. 450" onclick="this.style.borderColor='#4A90C4'"></div>
+              <div class="phone-field"><label>Building Value Range</label>
+                <div class="phone-select-wrap"><select class="phone-select"><option>Select...</option><option>Lower</option><option>Middle</option><option>Upper</option><option>Executive</option></select></div>
+              </div>
+              <div class="phone-field"><label>Short Description</label><textarea class="phone-textarea" placeholder="Describe area..."></textarea></div>
+              <div class="phone-field"><label>Media</label>
+                <div class="phone-media-row">
+                  <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'"><span class="media-icon">📷</span>Photos</div>
+                  <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'"><span class="media-icon">🎬</span>Video</div>
+                  <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'"><span class="media-icon">🎙️</span>Voice</div>
+                </div>
+              </div>
+              <button class="phone-btn" onclick="this.textContent='✓ Area Saved'; this.style.background='#22c55e'">Save Area</button>
+            </div>
+          </div>
+        `)}
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="step-label"><span class="step-label-num">2</span> Areas — Building Descriptions</div>
+      <div class="content-grid">
+        <div class="content-text">
+          <h3>Break the site down into areas</h3>
+          <p>Once the perimeter is saved, drill down into the main building and any further areas — for example paving, swimming pool or garage. For each area you capture:</p>
+          <div class="field-group">
+            <div class="field-group-title">Area Fields</div>
+            <ul class="field-list">
+              <li><strong>Area Name</strong> — selected from the building-description list (matches the VAR Indicator)</li>
+              <li><strong>Building Size m²</strong></li>
+              <li><strong>Building Value Range</strong> — Lower, Middle, Upper, Executive</li>
+              <li><strong>Short Description</strong></li>
+              <li>Photos, Videos &amp; Voice Notes</li>
+            </ul>
+          </div>
+          <div class="callout">
+            <span class="callout-icon">⚠️</span>
+            <p>Pick the <strong>Area Name</strong> that most closely matches what you are looking at. This field links your inspection to the VAR Indicator calculation, so an accurate match means an accurate replacement-cost figure.</p>
+          </div>
+        </div>
+        <div class="content-text">
+          <h3>Area Name options (A–Z)</h3>
+          <p>The full searchable list of building descriptions available in the Area Name dropdown:</p>
+          <div class="field-group" style="max-height:360px;overflow:auto">
+            <ul class="field-list">${areaListItems}</ul>
+          </div>
+        </div>
+      </div>
+
+      ${buildQuiz(4, quizData[4])}
+    </div>
+    <div class="section-footer">
+      <div style="font-size:13px;color:var(--gray-500)">Complete the knowledge check above, then mark this section done.</div>
+      <button class="complete-btn ${isComplete(4)?'done':''}" id="complete-btn-4" onclick="toggleComplete(4)">
+        ${isComplete(4) ? '✓ Section Complete' : '✦ Mark as Complete'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function buildSection6() {
+  return `
+  <div class="section-panel">
+    <div class="section-header">
+      <h2>Section 6 — Extra Documents</h2>
+      <p>Capture any documents handed to you on site by the client — quotations, Certificates of Compliance, permits, maintenance records, and any other relevant paperwork.</p>
+    </div>
+    <div class="section-body">
+      <div class="content-grid">
+        <div class="content-text">
+          <h3>Simple — but name clearly</h3>
+          <p>Section 6 is straightforward. The key discipline is naming each document clearly and specifically so the Desktop Assessor can identify it instantly without opening every file.</p>
+          <div class="field-group">
+            <div class="field-group-title">Typical Documents Captured Here</div>
+            <ul class="field-list">
+              <li>Quotations from contractors</li>
+              <li>Certificates of Compliance (CoC)</li>
+              <li>Building permits and approvals</li>
+              <li>Maintenance records handed on site</li>
+              <li>Inventory lists from the client</li>
+              <li>Any other documents the client provides</li>
+            </ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">Fields per Document</div>
+            <ul class="field-list">
+              <li><strong>Name</strong> — be specific, e.g. "Electrician Quote — Rewiring" not just "Quote"</li>
+              <li><strong>Description / Comments</strong> — context about what the document is and who provided it</li>
+              <li><strong>Photos</strong> — photograph physical documents clearly</li>
+              <li><strong>Videos</strong> — optional, for multi-page documents</li>
+              <li><strong>Voice Notes</strong> — useful for explaining context</li>
+            </ul>
+          </div>
+          <div class="tip">💡 If the client gives you a physical document, photograph each page clearly in good light. Ensure all text is legible before moving on.</div>
+        </div>
+        ${phoneFrame(`
+          <div class="phone-app-bar"><h4>Extra Documents</h4><p>Document Capture</p></div>
+          <div class="phone-content">
+            <div class="phone-section-title">Add Document</div>
+            <div class="phone-field"><label>Document Name</label><input class="phone-input" placeholder="e.g. Electrician CoC" onclick="this.style.borderColor='#4A90C4'"></div>
+            <div class="phone-field"><label>Description / Comments</label><textarea class="phone-textarea" placeholder="Context about this document and who provided it..." onclick="this.style.borderColor='#4A90C4'"></textarea></div>
+            <div class="phone-field"><label>Capture Document</label>
+              <div class="phone-media-row">
+                <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'; this.innerHTML='<span class=\\'media-icon\\'>📷</span>Added'"><span class="media-icon">📷</span>Photos</div>
+                <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'; this.innerHTML='<span class=\\'media-icon\\'>🎬</span>Added'"><span class="media-icon">🎬</span>Video</div>
+                <div class="phone-media-btn" onclick="this.style.background='#E8F2FA'; this.innerHTML='<span class=\\'media-icon\\'>🎙️</span>Added'"><span class="media-icon">🎙️</span>Voice</div>
+              </div>
+            </div>
+            <button class="phone-btn" onclick="this.textContent='✓ Document Saved'; this.style.background='#22c55e'">Save Document</button>
+            <button class="phone-btn secondary" style="margin-top:6px">+ Add Another Document</button>
+
+            <div style="margin-top:14px; background:white; border-radius:8px; padding:8px 10px;">
+              <div class="phone-section-title" style="margin-bottom:6px">Saved Documents</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee;font-size:10px;color:#334155">
+                <span>📄 Electrical CoC</span><span style="color:#22c55e;font-weight:700">✓</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;font-size:10px;color:#334155">
+                <span>📄 Alarm Service Record</span><span style="color:#22c55e;font-weight:700">✓</span>
+              </div>
+            </div>
+          </div>
+        `)}
+      </div>
+
+      ${buildQuiz(5, quizData[5])}
+    </div>
+    <div class="section-footer">
+      <div>
+        <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px">Complete the knowledge check above, then mark this section done.</div>
+        ${getCompletedCount() >= 5 ? `<div style="font-size:13px;font-weight:600;color:var(--green)">🎉 Almost there — finish this last section to complete your training!</div>` : ''}
+      </div>
+      <button class="complete-btn ${isComplete(5)?'done':''}" id="complete-btn-5" onclick="toggleComplete(5)">
+        ${isComplete(5) ? '✓ Training Complete!' : '✦ Mark as Complete'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function completeLastSection() {
+  markComplete(5);
+  const btn = document.getElementById('complete-btn-5');
+  if (btn) { btn.innerHTML = '🎉 Training Complete!'; btn.classList.add('done'); }
+  renderTutorial();
+}
+
+// ── SECTION RENDERERS ──
+const sectionBuilders = [buildSection1, buildSection2, buildSection3, buildSection4, buildSection5, buildSection6];
+
+function renderTutorial() {
+  const container = document.getElementById('tutorial-content');
+  container.innerHTML = sectionBuilders[currentSection]();
+  document.getElementById('tutorial-num').textContent = currentSection + 1;
+  document.getElementById('tutorial-section-name').textContent = sections[currentSection].title;
+  document.getElementById('btn-prev').disabled = currentSection === 0;
+  document.getElementById('btn-next').textContent = currentSection === TOTAL_SECTIONS - 1 ? 'Finish ✓' : 'Next →';
+  renderSectionDots();
+  updateProgressBar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function tutorialNav(dir) {
+  const next = currentSection + dir;
+  if (next < 0 || next >= TOTAL_SECTIONS) return;
+  currentSection = next;
+  renderTutorial();
+}
+
+// ── REFERENCE LIBRARY ──
+function renderReference() {
+  const grid = document.getElementById('ref-grid');
+  grid.innerHTML = '';
+  sections.forEach((s, i) => {
+    const done = isComplete(i);
+    const card = document.createElement('div');
+    card.className = 'ref-card';
+    card.innerHTML = `
+      <div class="ref-card-header">
+        <div class="ref-card-num">${i+1}</div>
+        <div class="ref-card-title">
+          <h3>${s.title}</h3>
+          <p>${getRefDescription(i)}</p>
+        </div>
+      </div>
+      <div class="ref-card-body">
+        <div class="ref-card-tags">${s.tags.map(t=>`<span class="ref-tag">${t}</span>`).join('')}</div>
+        <div class="ref-card-status">
+          <span class="${done?'ref-status-done':'ref-status-pending'}">${done?'✓ Completed':'Not yet completed'}</span>
+          <button class="ref-open-btn" onclick="openModal(${i})">Open →</button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function getRefDescription(i) {
+  return [
+    'Site type, security, construction & document tracking',
+    'Building records with indoor & outdoor area drill-down',
+    'Standalone assets outside buildings with values & serials',
+    'Your expert narrative of the event — the key section',
+    'Perimeter then Areas — building descriptions feeding the VAR Indicator',
+    'On-site documents provided by the client'
+  ][i];
+}
+
+function openModal(i) {
+  const overlay = document.getElementById('modal-overlay');
+  const content = document.getElementById('modal-content');
+  content.innerHTML = sectionBuilders[i]();
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+    renderReference();
+  }
+}
+
+// ── MODE SWITCH ──
+function switchMode(m) {
+  if (SESSION && !canAccess(SESSION.role, m)) return;
+  mode = m;
+  document.getElementById('view-tutorial').classList.toggle('hidden', m !== 'tutorial');
+  document.getElementById('view-reference').classList.toggle('hidden', m !== 'reference');
+  document.getElementById('view-course').classList.toggle('hidden', m !== 'course');
+  document.getElementById('view-admin').classList.toggle('hidden', m !== 'admin');
+  document.getElementById('progress-wrap').classList.toggle('hidden', m !== 'tutorial');
+  document.getElementById('tab-tutorial').classList.toggle('active', m === 'tutorial');
+  document.getElementById('tab-reference').classList.toggle('active', m === 'reference');
+  document.getElementById('tab-course').classList.toggle('active', m === 'course');
+  document.getElementById('tab-admin').classList.toggle('active', m === 'admin');
+  if (m === 'reference') renderReference();
+  else if (m === 'course') renderCourse();
+  else if (m === 'admin') renderAdmin();
+  else renderTutorial();
+}
+
+// ── PHONE INTERACTION HELPERS ──
+function selectDocOpt(el, type) {
+  const siblings = el.parentElement.querySelectorAll('.phone-doc-opt');
+  siblings.forEach(s => s.className = 'phone-doc-opt');
+  el.classList.add('selected-' + type);
+}
+
+function phoneTabSwitch(el, showId, hideId) {
+  const show = document.getElementById(showId);
+  const hide = document.getElementById(hideId);
+  if (show) show.classList.remove('hidden');
+  if (hide) hide.classList.add('hidden');
+  const siblings = el.parentElement.querySelectorAll('.phone-tab');
+  siblings.forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectArea(el, formId) {
+  const siblings = el.parentElement.querySelectorAll('.phone-area-card');
+  siblings.forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  const form = document.getElementById(formId);
+  if (form) form.classList.remove('hidden');
+}
+
+function ynToggle(btn, type) {
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.phone-yn-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ════════════════════════════════════════════════
+//  LOSS ADJUSTING COURSE
+//  General-knowledge curriculum drawn from the
+//  Chedza loss-adjusting training material.
+// ════════════════════════════════════════════════
+
+let courseView = null; // null = module list, number = lesson index
+
+function loadCourseProgress() {
+  try { return JSON.parse(localStorage.getItem('uclaim_course_progress__' + currentUsername()) || '{}'); } catch(e) { return {}; }
+}
+function saveCourseProgress(p) { localStorage.setItem('uclaim_course_progress__' + currentUsername(), JSON.stringify(p)); }
+function isCourseComplete(i) { return !!loadCourseProgress()[i]; }
+function getCourseCompletedCount() { return Object.values(loadCourseProgress()).filter(Boolean).length; }
+function courseMarkComplete(i) {
+  const p = loadCourseProgress(); p[i] = true; saveCourseProgress(p);
+}
+
+// ── COURSE DATA ──
+// block types: p (paragraph), h (subheading), list {title, items}, tip, callout
+const courseModules = [
+  {
+    cat: 'Insurance Foundations',
+    title: 'Foundations of Insurance',
+    sub: 'The principles every claim is built on.',
+    map: 'General Knowledge',
+    tags: ['Principles', 'Indemnity', 'Average'],
+    blocks: [
+      { type:'p', text:'The main purpose of insurance is to <strong>spread the losses of a few among the premiums of the many</strong>. Insurance transfers risk from the Insured to the Insurer, who undertakes to place the Insured back in the same financial position they were in before the loss. The Insurer must also protect that pool of premiums against fraud and invalid claims.' },
+      { type:'h', text:'How the Insurer makes it work' },
+      { type:'p', text:'Premiums are used to pay claims, cover admin costs, and generate profit (reserves are invested). Premiums are calculated through <strong>underwriting</strong> &mdash; evaluating how likely a loss is and how much it would cost. The <strong>Loss Ratio</strong> compares losses paid out against premiums received to show whether a risk is profitable.' },
+      { type:'list', title:'The core principles', items:[
+        '<strong>Insurable Interest</strong> &mdash; you can only insure property you have a legal/financial interest in (some exceptions: tenants, storage).',
+        '<strong>Contribution</strong> &mdash; a property may only be insured once; if insured with more than one insurer, each pays its proportion.',
+        '<strong>Average</strong> &mdash; if underinsured (sum insured is less than replacement value), the Insured carries the shortfall as their own insurer.',
+        '<strong>First Loss</strong> &mdash; Average does not apply; an estimated worst-case loss amount.',
+        '<strong>Good Faith &amp; Duty of Care</strong> &mdash; the Insured must disclose all relevant risk information and accurate values; material non-disclosure can void the policy.',
+        '<strong>Indemnity</strong> &mdash; put the Insured back in the same financial position; they may not profit from the loss (Market Value, Replacement Value, Cash Settlement, Repair, Reinstatement).',
+        '<strong>Compensation</strong> &mdash; benefits provided when indemnity cannot be achieved.',
+        '<strong>Subrogation</strong> &mdash; lets the Insurer recover/sell salvage and take over a third-party claim.',
+        '<strong>Proximate Cause</strong> &mdash; the loss must be caused by a fortuitous insured event, not something inevitable or deliberate.'
+      ]},
+      { type:'list', title:'What generally cannot be insured', items:[
+        'The land a building stands on',
+        'Property belonging to third parties (unless specifically agreed)',
+        'Gradual deterioration, corrosion, wear &amp; tear',
+        'Faulty design, poor construction or installation, material defects',
+        'Criminal activities',
+        'Terrorism, war and pandemics'
+      ]}
+    ],
+    quiz: [
+      { q:'What is the main purpose of insurance?',
+        opts:['To guarantee a profit for the insured','To spread the losses of a few among the premiums of the many','To replace government welfare','To value property'],
+        correct:1,
+        feedback:{ c:'Correct. Insurance pools premiums from many to cover the losses of a few.', w:'The main purpose is to spread the losses of a few among the premiums of the many.' } },
+      { q:'A building has a replacement value of R2m but is only insured for R1m. A claim is reduced proportionally. Which principle applies?',
+        opts:['Subrogation','Contribution','Average','Proximate Cause'],
+        correct:2,
+        feedback:{ c:'Correct. Average means an underinsured client carries the shortfall and claims are reduced proportionally.', w:'This is Average &mdash; underinsurance means the client carries the shortfall.' } },
+      { q:'Which principle allows the insurer to recover salvage or pursue a third party?',
+        opts:['Indemnity','Subrogation','Insurable Interest','First Loss'],
+        correct:1,
+        feedback:{ c:'Correct. Subrogation lets the insurer recover salvage and take over third-party claims.', w:'That is Subrogation.' } }
+    ]
+  },
+  {
+    cat: 'Insurance Foundations',
+    title: "Who's Who: Role-Players",
+    sub: 'The people and bodies around every claim.',
+    map: 'General Knowledge',
+    tags: ['Insurer', 'Broker', 'Loss Adjuster'],
+    blocks: [
+      { type:'p', text:'Many parties play a role before and during a claim. Knowing who does what &mdash; and who they act for &mdash; keeps your communication and your reports accurate.' },
+      { type:'list', title:"On the insurer's side", items:[
+        '<strong>Insurer</strong> &mdash; the principal insurance company',
+        '<strong>Co-Insurer</strong> &mdash; more than one insurer covers a property',
+        '<strong>UMA</strong> (Underwriting Management Agency) &mdash; an agent of the insurer with rights to accept risk',
+        '<strong>Underwriter</strong> &mdash; calculates the premium based on the risk',
+        '<strong>Claims Handler</strong> &mdash; the insurer&rsquo;s intermediary between adjuster, insurer, broker and insured',
+        '<strong>Re-Insurer</strong> &mdash; insurance for insurers'
+      ]},
+      { type:'list', title:"On the insured's side", items:[
+        '<strong>Insured</strong> &mdash; individual, company, owner or policyholder',
+        '<strong>Broker / Intermediary</strong> &mdash; agent of the insured',
+        '<strong>Mandated Broker</strong> &mdash; a broker with rights to accept liability on claims',
+        '<strong>Public Assessor</strong> &mdash; appointed by the insured to formulate their claim'
+      ]},
+      { type:'list', title:'Independent & other bodies', items:[
+        '<strong>Loss Adjuster</strong> &mdash; appointed by the insurer to investigate and assess claims, but acts impartially',
+        '<strong>Specialists</strong> &mdash; field experts (BI, structures, liability, forensic, cyber)',
+        '<strong>Ombudsman</strong> &mdash; free, informal, speedy dispute resolution',
+        '<strong>SASRIA</strong> &mdash; cover for labour action, civil unrest and terrorism'
+      ]},
+      { type:'tip', text:'Key distinction: a <strong>Loss Adjuster</strong> is appointed by the Insurer but stays impartial, whereas a <strong>Public Assessor</strong> works for the Insured.' }
+    ],
+    quiz: [
+      { q:'Who is appointed by the insurer to investigate a claim, while remaining impartial?',
+        opts:['The Public Assessor','The Loss Adjuster','The Broker','The Underwriter'],
+        correct:1,
+        feedback:{ c:'Correct. The Loss Adjuster is the insurer&rsquo;s appointee but acts impartially.', w:'That is the Loss Adjuster.' } },
+      { q:'A Public Assessor is appointed by whom?',
+        opts:['The Insurer','The Insured','The Ombudsman','SASRIA'],
+        correct:1,
+        feedback:{ c:'Correct. The Public Assessor works for the Insured to formulate their claim.', w:'The Public Assessor is appointed by the Insured.' } },
+      { q:'What does SASRIA provide cover for?',
+        opts:['Motor accidents','Life and funeral cover','Labour action, civil unrest and terrorism','Professional indemnity'],
+        correct:2,
+        feedback:{ c:'Correct. SASRIA covers special perils such as civil unrest and terrorism.', w:'SASRIA covers labour action, civil unrest and terrorism.' } }
+    ]
+  },
+  {
+    cat: 'Insurance Foundations',
+    title: 'Insurance Products & Perils',
+    sub: 'The cover types and the perils behind claims.',
+    map: 'General Knowledge',
+    tags: ['Products', 'Perils', 'Cover'],
+    blocks: [
+      { type:'list', title:'Product groups', items:[
+        '<strong>Healthcare</strong> (medical aid, dread disease)',
+        '<strong>Long-term</strong> (life, funeral, retirement)',
+        '<strong>Short-term</strong> (property &amp; assets) &mdash; split into Personal/Domestic and Business/Commercial lines'
+      ]},
+      { type:'list', title:'Personal / domestic lines', items:[
+        'Homeowners (building)', 'Householders (contents)', 'All Risks', 'Motor', 'Personal Liability', 'Personal Accident', 'Electronic Equipment'
+      ]},
+      { type:'list', title:'Business / commercial lines (selection)', items:[
+        'Fire', 'Buildings Combined', 'Office Contents', 'Business Interruption / Loss of Profits', 'Theft', 'Money', 'Glass', 'Fidelity Guarantee', 'Goods in Transit', 'Public Liability', 'Machinery Breakdown', 'Electronic Equipment'
+      ]},
+      { type:'list', title:'Insurable perils', items:[
+        'Fire', 'Lightning', 'Explosion', 'Storm, wind, water, hail &amp; snow', 'Earthquake', 'Impact', 'Theft', 'Malicious Damage', 'Subsidence &amp; Landslip'
+      ]}
+    ],
+    quiz: [
+      { q:'Homeowners cover insures the building. Which product insures the contents?',
+        opts:['All Risks','Householders','Motor','Fidelity Guarantee'],
+        correct:1,
+        feedback:{ c:'Correct. Householders covers contents; Homeowners covers the building.', w:'Householders covers the contents.' } },
+      { q:'Which of these is an insurable peril?',
+        opts:['Gradual wear and tear','Storm and hail','Faulty design','Inevitable corrosion'],
+        correct:1,
+        feedback:{ c:'Correct. Storm and hail is an insured peril; the others are typically excluded.', w:'Storm and hail is the insurable peril here.' } },
+      { q:'Business Interruption cover responds to what?',
+        opts:['Theft of cash','Loss of profits following insured damage','Director liability','Vehicle accidents'],
+        correct:1,
+        feedback:{ c:'Correct. BI covers loss of profits when the business is interrupted by insured damage.', w:'Business Interruption covers loss of profits after insured damage.' } }
+    ]
+  },
+  {
+    cat: 'Insurance Foundations',
+    title: 'The Claims Process',
+    sub: 'From the loss event to final settlement.',
+    map: 'Whole app',
+    tags: ['Process', 'Reports', 'Settlement'],
+    blocks: [
+      { type:'list', title:'How a claim flows', items:[
+        'The Insured suffers a loss and notifies the broker/insurer as soon as possible',
+        'They submit a claim form, photos, damage report and/or quotations',
+        'The claims handler or broker registers and validates the claim (premiums paid?)',
+        'A Loss Adjuster is appointed; broker and insured are informed',
+        'The insurer provides the policy schedule, wording, asset register, claims history and scope of works',
+        'The adjuster reviews everything and checks whether the loss is an insured event',
+        'The adjuster contacts the insured to arrange the site visit'
+      ]},
+      { type:'list', title:'On the first site visit', items:[
+        'Meet the insured and conduct preliminary interviews and inspections',
+        'Establish any third-party involvement',
+        'Determine whether an insured peril caused the loss',
+        'Decide whether specialists are needed &mdash; the scene must not be disturbed first',
+        'Discuss procedure, possible delays and repair / reinstatement options',
+        'Determine the Value at Risk and the reserve of damage'
+      ]},
+      { type:'list', title:'Reports & decisions', items:[
+        '<strong>Preliminary</strong>, <strong>Interim</strong> (progress &amp; interim payments) and <strong>Final</strong> reports &mdash; small claims may get a single <strong>First &amp; Final Report</strong>',
+        'Each final report confirms policy response, whether Average applies, the adjustment, and a settlement recommendation',
+        'The insurer then instructs an <strong>AOL</strong> (Agreement of Loss) for payment, or repudiates',
+        'Insurers may decline for no cover, breach of condition, non-disclosure or fraud'
+      ]},
+      { type:'callout', text:'The uClaim site report is the structured record you capture on that first site visit &mdash; it feeds straight into this process and gives the desktop assessor everything they need.' }
+    ],
+    quiz: [
+      { q:'At registration, what is confirmed before a claim proceeds?',
+        opts:['That the building is rebuilt','That premiums are paid and the claim is valid','That salvage is sold','That a specialist has reported'],
+        correct:1,
+        feedback:{ c:'Correct. The claim is validated and premiums confirmed paid before it proceeds.', w:'Premiums must be paid and the claim validated first.' } },
+      { q:'For a small, straightforward claim, which single report may be issued?',
+        opts:['Interim Report only','First & Final Report','Preliminary Report only','No report'],
+        correct:1,
+        feedback:{ c:'Correct. Small claims can be dealt with in one First & Final Report.', w:'A First & Final Report can cover a small claim in one go.' } },
+      { q:'Which is a valid reason for an insurer to repudiate a claim?',
+        opts:['The adjuster was late','Material non-disclosure or fraud','The weather was bad','The building is old'],
+        correct:1,
+        feedback:{ c:'Correct. Breach of condition, non-disclosure and fraud can all lead to repudiation.', w:'Non-disclosure or fraud are valid reasons to repudiate.' } }
+    ]
+  },
+  {
+    cat: 'The Loss Adjuster',
+    title: 'The Role of a Loss Adjuster',
+    sub: 'What the adjuster does and the information they need.',
+    map: 'Whole app',
+    tags: ['Role', 'Impartial', 'Reporting'],
+    blocks: [
+      { type:'list', title:'Your role', items:[
+        'Act as an impartial intermediary between insurer and insured',
+        'Investigate the circumstances of the claim, including possible third-party recovery',
+        'Be the &ldquo;eyes and ears&rdquo; of the insurer on site',
+        'Establish whether the policy responds in principle',
+        'Communicate regularly with all parties',
+        'Interpret the policy wording &mdash; do any exclusions apply? Have warranties been met?',
+        'Provide a final settlement recommendation and obtain the AOL',
+        'Add value to the claims process'
+      ]},
+      { type:'list', title:'Information needed to register a claim', items:[
+        'Insurer claim &amp; policy numbers (and co-insurer details)',
+        'Broker and insured details',
+        'Claim form: date of loss, type of loss, list of damages',
+        'Scope of work: desktop / site visit / investigative',
+        'Whether a public assessor is involved, and communication channels'
+      ]},
+      { type:'list', title:'Information to obtain from the insurer', items:[
+        'Policy wording, schedule, sum insured and deductibles',
+        'Asset register and claims history',
+        'Survey / damage / incident reports',
+        'Quotations, invoices, original invoices, market value',
+        'Photos, video, CCTV footage and construction drawings'
+      ]},
+      { type:'callout', text:'The adjuster&rsquo;s product is the <strong>Report</strong> &mdash; accurate, concise, well laid out, with all the information. uClaim helps you capture that information consistently while you are still on site.' }
+    ],
+    quiz: [
+      { q:'The phrase "eyes and ears of the insurer" describes whom?',
+        opts:['The broker','The loss adjuster','The underwriter','The public assessor'],
+        correct:1,
+        feedback:{ c:'Correct. The adjuster is the insurer&rsquo;s eyes and ears on site.', w:'That describes the loss adjuster.' } },
+      { q:'What does AOL stand for?',
+        opts:['Amount of Loss','Agreement of Loss','Assessment of Liability','Adjustment on Ledger'],
+        correct:1,
+        feedback:{ c:'Correct. AOL is the Agreement of Loss the insurer instructs for payment.', w:'AOL means Agreement of Loss.' } },
+      { q:'What is the loss adjuster&rsquo;s main "product"?',
+        opts:['The site photographs','The report','The quotation','The asset register'],
+        correct:1,
+        feedback:{ c:'Correct. The report is the adjuster&rsquo;s product &mdash; it must be accurate and complete.', w:'The report is the adjuster&rsquo;s product.' } }
+    ]
+  },
+  {
+    cat: 'On Site',
+    title: 'Preparing for & Conducting the Site Visit',
+    sub: 'Get ready, look professional, gather everything.',
+    map: 'Section 1 & whole app',
+    tags: ['Preparation', 'PPE', 'Investigation'],
+    blocks: [
+      { type:'list', title:'Before you call the insured', items:[
+        'Review the claim form and policy schedule',
+        'Prepare your site checklist and a list of information to gather on site',
+        'List what the insured can prepare in advance: alarm activity report, police case number, fire-brigade file, list of damaged/missing items, repair quotes, and a contents/asset list'
+      ]},
+      { type:'list', title:'Preparation', items:[
+        'Dress appropriately and wear the correct PPE (hard hat, safety shoes, reflective vest, glasses, gloves)',
+        'Look professional &mdash; carry ID or a business card',
+        'Bring the equipment you need (camera, recorder, notebook, ladder)',
+        'Act professionally and treat people with respect &mdash; you are the face of the insurer'
+      ]},
+      { type:'list', title:'On site, gather', items:[
+        'The insured&rsquo;s full name, contact details and occupation',
+        'Owner or tenant, and how long at the property',
+        'Previous claims history',
+        'Who owns the damaged property/goods, their age, where purchased and serial numbers',
+        'Lease / hire agreements and the condition of the property/goods',
+        'Exactly what happened'
+      ]},
+      { type:'list', title:'Investigate', items:[
+        'Record discussions with voice notes',
+        'Interview witnesses &mdash; who discovered the damage and when',
+        'Photograph damage, point of entry and proof of an active peril',
+        'Instruct the insured not to disturb the scene until investigations are complete',
+        'Determine whether specialists are required',
+        'Check security and any health &amp; safety issues'
+      ]},
+      { type:'tip', text:'Capturing all of this in uClaim as you walk the site keeps your record complete and consistent &mdash; nothing gets forgotten back at the office.' }
+    ],
+    quiz: [
+      { q:'Which of these should you ask the insured to prepare before the visit?',
+        opts:['The final report','The alarm activity report, police number and quotes','The AOL','The reinsurance treaty'],
+        correct:1,
+        feedback:{ c:'Correct. These let the insured have key evidence ready before you arrive.', w:'Ask for the alarm activity report, police number and quotes in advance.' } },
+      { q:'Why instruct the insured not to disturb the scene?',
+        opts:['To save cleaning costs','So investigations and specialists can examine the evidence first','Because the policy says so','To delay the claim'],
+        correct:1,
+        feedback:{ c:'Correct. The scene must stay intact until the investigation is complete.', w:'The scene must be preserved for investigation and specialists.' } },
+      { q:'On site you should always confirm whether the person is the...',
+        opts:['Broker or assessor','Owner or tenant','Underwriter or handler','Witness or neighbour'],
+        correct:1,
+        feedback:{ c:'Correct. Owner vs tenant affects insurable interest and the claim.', w:'Always confirm owner or tenant.' } }
+    ]
+  },
+  {
+    cat: 'On Site',
+    title: 'Investigating by Peril Type',
+    sub: 'What to ask for burglary, fire and storm losses.',
+    map: 'Section 4 (Executive Summary)',
+    tags: ['Burglary', 'Fire', 'Storm'],
+    blocks: [
+      { type:'h', text:'Burglary' },
+      { type:'list', title:'Establish', items:[
+        'Who was last on site and locked up (time &amp; date)',
+        'Who discovered the loss and what they did afterwards',
+        'Police notification, and whether the alarm was armed / activated',
+        'How the offenders got in and out',
+        'Building protections (doors, window locks, security gates, alarm)',
+        'Surrounding risk factors (open land, taxi ranks, informal settlements)'
+      ]},
+      { type:'h', text:'Fire' },
+      { type:'list', title:'Establish', items:[
+        'Exactly how the fire was discovered and where the insured was when it started',
+        'Interview witnesses and what they saw, and build a timeline',
+        'Gather any photos or videos',
+        'Consider whether a forensic investigation is required'
+      ]},
+      { type:'h', text:'Storm / Lightning' },
+      { type:'list', title:'Establish', items:[
+        'Confirm a storm actually occurred using a weather report',
+        'Do not simply accept a repairer&rsquo;s word &mdash; they often blame lightning or a power surge when that was not the cause'
+      ]},
+      { type:'callout', text:'Use the Executive Summary (and Voice Notes) to record the cause-of-loss story in your own words &mdash; this is exactly where peril-specific detail belongs.' }
+    ],
+    quiz: [
+      { q:'For a storm or lightning claim, what should you always do?',
+        opts:['Accept the repairer&rsquo;s opinion','Confirm the storm with a weather report','Repudiate the claim','Skip the site visit'],
+        correct:1,
+        feedback:{ c:'Correct. Always confirm the storm independently with a weather report.', w:'Confirm with a weather report; don&rsquo;t rely on the repairer.' } },
+      { q:'In a burglary investigation, an important question is...',
+        opts:['The colour of the walls','How the offenders entered and exited','The brand of the alarm only','The insured&rsquo;s favourite room'],
+        correct:1,
+        feedback:{ c:'Correct. Point of entry and exit is central to a burglary investigation.', w:'How the offenders got in and out is key.' } },
+      { q:'For a fire loss, which may be required?',
+        opts:['A weather report','A forensic investigation','A motor inspection','A funeral policy'],
+        correct:1,
+        feedback:{ c:'Correct. A forensic investigation may be needed to establish cause.', w:'A forensic investigation may be required for a fire.' } }
+    ]
+  },
+  {
+    cat: 'On Site',
+    title: 'Site Photography & Media',
+    sub: 'Photos and videos that tell the story.',
+    map: 'Photos & Videos (every section)',
+    tags: ['Photos', 'Video', 'Evidence'],
+    blocks: [
+      { type:'list', title:'Why we take photos', items:[
+        'Communicate with colleagues and the client',
+        'Record damaged <em>and</em> undamaged areas',
+        'Protect against disputes',
+        'Supplement the report &mdash; a good photo speaks a thousand words'
+      ]},
+      { type:'list', title:'Good technique', items:[
+        'Take a wide angle, then a close-up',
+        'Keep a point of reference in every photo',
+        'Good lighting &mdash; not too dark or too bright',
+        'Change perspective to show a leaning wall or sagging roof',
+        'Move forward instead of zooming, and stay steady',
+        'Take more than you think you need'
+      ]},
+      { type:'list', title:'When to shoot', items:[
+        'On arrival: street view and the house / complex number',
+        'During the walk-about: everything the insured points at (a visual diary)',
+        'Afterwards: check and re-take any blurred photos, and capture general condition'
+      ]},
+      { type:'list', title:'Organise', items:[
+        'Number photos in walking order: street &rarr; exterior &rarr; entrance &rarr; room to room',
+        'Use leading zeros (01, 02 &hellip; 09, 10) so they sort correctly',
+        'Describe the main object, but don&rsquo;t tell the whole story in the caption',
+        'Avoid duplicates unless it is a different perspective or close-up'
+      ]},
+      { type:'tip', text:'In uClaim, attach photos and videos directly to the relevant building, area or asset &mdash; they stay organised automatically.' }
+    ],
+    quiz: [
+      { q:'What is good photo technique on site?',
+        opts:['One blurry photo per room','Wide angle then close-up, with a point of reference','Only close-ups','Zoom in from far away'],
+        correct:1,
+        feedback:{ c:'Correct. Wide-then-close with a reference point tells the full story.', w:'Wide angle then close-up, with a point of reference.' } },
+      { q:'Which should you photograph?',
+        opts:['Only the worst damage','Both damaged and undamaged areas','Nothing &mdash; video only','Only the street'],
+        correct:1,
+        feedback:{ c:'Correct. Recording undamaged areas protects against disputes.', w:'Photograph both damaged and undamaged areas.' } },
+      { q:'Photos should be numbered...',
+        opts:['Randomly','In the order you walk the site (street to room)','Alphabetically','By file size'],
+        correct:1,
+        feedback:{ c:'Correct. Number them in walking order, with leading zeros.', w:'Number them in the order you walk the site.' } }
+    ]
+  },
+  {
+    cat: 'Technical Knowledge',
+    title: 'Building Construction Basics',
+    sub: 'Describe construction and roofs accurately.',
+    map: 'Sections 1, 2 & 5',
+    tags: ['Construction', 'Roofs', 'Structures'],
+    blocks: [
+      { type:'p', text:'Understanding how buildings are put together helps you describe construction and roof types accurately, and spot the damage that matters for repair costs.' },
+      { type:'list', title:'Common construction types', items:[
+        '<strong>Standard (brick) house</strong> &mdash; loads pass from roof &rarr; walls &rarr; foundations &rarr; subsoil',
+        '<strong>Steel portal frame</strong> &mdash; common for warehouses and industrial buildings',
+        '<strong>Concrete column &amp; beam</strong> (concrete frame structures)',
+        '<strong>Cast in-situ concrete</strong> and <strong>pre-cast concrete</strong> buildings',
+        'Plus timber, stone and prefabricated concrete'
+      ]},
+      { type:'list', title:'Parts of a roof', items:[
+        'Ridge, hip, valley, gable / rake, gable end',
+        'Eave, fascia, soffit (underside)',
+        'Flashing, chimney flashing, drip edge',
+        'Rain gutter, downspout, dormer, skylight, abutment'
+      ]},
+      { type:'list', title:'Roof coverings you will select', items:[
+        'Concrete slab, concrete tiles, IBR, asbestos',
+        'NuTec sheeting, slate, corrugated metal',
+        'Harvey tile, thatch, timber'
+      ]},
+      { type:'tip', text:'Match what you see to the dropdowns in Section 1 (Construction &amp; Roof), then describe it accurately in Sections 2 &amp; 5.' }
+    ],
+    quiz: [
+      { q:'A steel portal frame is most associated with which buildings?',
+        opts:['Thatched cottages','Warehouses and industrial buildings','High-rise apartments','Brick houses'],
+        correct:1,
+        feedback:{ c:'Correct. Steel portal frames are typical of warehouse / industrial structures.', w:'Steel portal frames are common in warehouses and industrial buildings.' } },
+      { q:'In standard house construction, loads are ultimately transferred to...',
+        opts:['The roof','The windows','The foundations and load-bearing subsoil','The gutters'],
+        correct:2,
+        feedback:{ c:'Correct. Loads run from roof to walls to foundations into the subsoil.', w:'Loads end up at the foundations and load-bearing subsoil.' } },
+      { q:'Which of these is a roof covering type?',
+        opts:['Brick &amp; plaster','Harvey tile','Vinyl','Skirtings'],
+        correct:1,
+        feedback:{ c:'Correct. Harvey tile is a roof covering; the others relate to walls or floors.', w:'Harvey tile is the roof covering here.' } }
+    ]
+  },
+  {
+    cat: 'Technical Knowledge',
+    title: 'Value at Risk (VAR) Explained',
+    sub: 'Perimeter, Areas and how the VAR Indicator works.',
+    map: 'Section 5 (VAR Property)',
+    tags: ['VAR', 'Perimeter', 'Areas', 'Average'],
+    blocks: [
+      { type:'p', text:'<strong>Value at Risk (VAR)</strong> is the replacement cost of the property &mdash; what it would cost to rebuild or replace it. It is compared against the <strong>Sum Insured</strong> to decide whether the Condition of Average applies.' },
+      { type:'p', text:'In uClaim, Section 5 captures the VAR in two parts: first the <strong>Perimeter</strong> (your base), then the <strong>Areas</strong>. The perimeter must be completed before you can add areas.' },
+      { type:'list', title:'Step 1 — Perimeter captures', items:[
+        'Perimeter Type, Entrance Type and Security',
+        'Perimeter Value Range &mdash; Lower, Middle, Upper or Executive',
+        'Perimeter m&sup2; and Layout of Yard',
+        'Short description, plus Photos, Videos &amp; Voice Notes'
+      ]},
+      { type:'list', title:'Step 2 — Areas capture', items:[
+        '<strong>Area Name</strong> &mdash; chosen from a list of building descriptions that match the VAR Indicator',
+        'Building Size m&sup2; and Building Value Range (Lower / Middle / Upper / Executive)',
+        'Short description, plus Photos, Videos &amp; Voice Notes'
+      ]},
+      { type:'p', text:'<strong>Why it matters:</strong> if the sum insured is too low, Average reduces every claim payment. An accurate VAR protects the insured from being underinsured and gives the insurer a true picture of the risk.' },
+      { type:'callout', text:'The building description you pick for each Area maps directly to uClaim&rsquo;s Big Data system, which turns it into a high-level replacement-cost figure &mdash; the <strong>VAR Indicator</strong> &mdash; automatically. The closer your match, the more accurate the figure.' }
+    ],
+    quiz: [
+      { q:'The VAR is compared against the Sum Insured to determine what?',
+        opts:['The excess amount','Whether Average applies','The broker&rsquo;s commission','The premium rate'],
+        correct:1,
+        feedback:{ c:'Correct. Comparing VAR to the sum insured shows whether Average applies.', w:'It determines whether the Condition of Average applies.' } },
+      { q:'If a property is underinsured, Average means...',
+        opts:['The claim is paid in full','Claims are reduced proportionally','The policy is cancelled','The premium is refunded'],
+        correct:1,
+        feedback:{ c:'Correct. Underinsurance triggers a proportional reduction in claims.', w:'Average reduces claims proportionally when underinsured.' } },
+      { q:'In Section 5, what must be completed before you can add Areas?',
+        opts:['The weather report','The Perimeter','The police case number','The Executive Summary'],
+        correct:1,
+        feedback:{ c:'Correct. The Perimeter is the base and must be captured before any Areas.', w:'The Perimeter must be completed first.' } }
+    ]
+  },
+  {
+    cat: 'Technical Knowledge',
+    title: 'Machinery Breakdown (Specialist)',
+    sub: 'What this specialist cover does and does not pay.',
+    map: 'Section 3 (Damaged Assets)',
+    tags: ['Machinery', 'Plant', 'Specialist'],
+    blocks: [
+      { type:'p', text:'Machinery Breakdown covers <strong>unforeseen and sudden physical damage</strong> to a machine described in the schedule, from any cause not excluded &mdash; whether the machine is at work, at rest, or being dismantled / moved / re-erected on the premises.' },
+      { type:'list', title:'Defined terms', items:[
+        '<strong>Unforeseen</strong> &mdash; could not reasonably be predicted',
+        '<strong>Sudden</strong> &mdash; without warning, abruptly',
+        '<strong>Physical</strong> &mdash; pertaining to material',
+        '<strong>Damage</strong> &mdash; loss or destruction'
+      ]},
+      { type:'list', title:'Typically covered', items:[
+        'A bolt coming loose and damaging the machine',
+        'Power surge or cooling-system failure',
+        'A fan belt breaking, causing a motor to overheat and seize',
+        'Tube failure on a heat-transfer system, or roller failure on a press',
+        'When the cause cannot be established, the onus is on insurers to prove an exclusion applies'
+      ]},
+      { type:'list', title:'Common exclusions', items:[
+        'Fire &amp; allied perils, theft, water, storm / flood / earthquake',
+        'Wear, wastage and gradual deterioration',
+        'Expendable parts and tools (bits, blades, belts, chains)',
+        'Overhauls / improvements carried out during the repair',
+        'Abnormal-load tests, and pre-existing known defects'
+      ]},
+      { type:'list', title:'Basis of indemnity', items:[
+        'Sum insured = new replacement value incl. freight, duties and erection costs',
+        'Difficult-position installation costs (e.g. crane hire) must be included',
+        'Average applies',
+        'If the same model is discontinued, value at the closest equivalent machine'
+      ]},
+      { type:'tip', text:'Standalone plant such as generators and refrigeration are exactly the kind of asset you capture in Section 3 &mdash; record the make, serial number, value and condition.' }
+    ],
+    quiz: [
+      { q:'Machinery Breakdown covers damage that is...',
+        opts:['Gradual and expected','Unforeseen and sudden','Caused deliberately','Due to normal wear'],
+        correct:1,
+        feedback:{ c:'Correct. The defined event is unforeseen and sudden physical damage.', w:'It covers unforeseen and sudden physical damage.' } },
+      { q:'Which of these is typically EXCLUDED?',
+        opts:['A seized motor from a broken fan belt','Damage to expendable parts like blades and belts','A power surge','A loose bolt damaging the machine'],
+        correct:1,
+        feedback:{ c:'Correct. Expendable parts and tools are excluded.', w:'Expendable parts and tools (blades, belts) are excluded.' } },
+      { q:'When the same machine model is no longer available, you value it at...',
+        opts:['Zero','Scrap value only','The closest equivalent machine','The original purchase price'],
+        correct:2,
+        feedback:{ c:'Correct. Use the closest equivalent machine of similar quality and output.', w:'Value it at the closest equivalent machine.' } }
+    ]
+  },
+  {
+    cat: 'Professional Skills',
+    title: 'Professional Meetings',
+    sub: 'Run and attend meetings that get results.',
+    map: 'General Knowledge',
+    tags: ['Meetings', 'Communication'],
+    blocks: [
+      { type:'list', title:'Basic rules', items:[
+        'Be on time and introduce those present',
+        'Have an agenda and stick to it',
+        'Mind your body language and speak clearly',
+        'Don&rsquo;t interrupt; no phone or laptop except for notes',
+        'Respect the chair, let everyone speak, and don&rsquo;t dominate'
+      ]},
+      { type:'list', title:'Positive body language', items:[
+        'Upright, open posture and a firm handshake',
+        'Eye contact, hands visible, nodding and leaning in',
+        'Correct dress, an even tone, and a smile'
+      ]},
+      { type:'list', title:'Watch out for', items:[
+        'Folded arms (resistance/defensiveness)',
+        'Slouching (disinterest)',
+        'Texting or emailing (disrespect)',
+        'No eye contact (low confidence)',
+        'Checking your watch (you have somewhere better to be)'
+      ]}
+    ],
+    quiz: [
+      { q:'Which is good meeting practice?',
+        opts:['Arriving late','Having an agenda and sticking to it','Dominating the discussion','Checking your phone often'],
+        correct:1,
+        feedback:{ c:'Correct. A clear agenda keeps a meeting productive.', w:'Have an agenda and stick to it.' } },
+      { q:'Folded arms in a meeting typically signal...',
+        opts:['Confidence','Resistance or defensiveness','Agreement','Enthusiasm'],
+        correct:1,
+        feedback:{ c:'Correct. Folded arms read as resistance or defensiveness.', w:'Folded arms signal resistance or defensiveness.' } }
+    ]
+  },
+  {
+    cat: 'Professional Skills',
+    title: 'Ethics & Integrity',
+    sub: 'Settle every claim honestly and fairly.',
+    map: 'General Knowledge',
+    tags: ['Ethics', 'Integrity', 'Objectivity'],
+    blocks: [
+      { type:'p', text:'Our job is to settle claims honestly and fairly. Ethics are the moral principles that govern conduct &mdash; and the adjuster faces real pressures that can interfere with that.' },
+      { type:'list', title:'Pressures that can compromise you', items:[
+        'The insured pushing you to overlook facts or accept overstated claims',
+        'The insurer pushing to cut claims',
+        'The broker pushing you to favour their client',
+        'Letting personal feelings affect your approach',
+        'Jumping to conclusions without checking the facts',
+        'Not verifying quantum, or being selective in your report',
+        'Creating false expectations'
+      ]},
+      { type:'list', title:'How to stay ethical', items:[
+        'Never compromise your integrity &mdash; one bad decision can follow you forever',
+        'Always remain objective and don&rsquo;t cut corners',
+        'Make sure you get all the facts',
+        'Manage your workload and present all relevant information',
+        'Ask for help when needed, and watch what you say and write'
+      ]}
+    ],
+    quiz: [
+      { q:'What is the loss adjuster&rsquo;s core ethical duty?',
+        opts:['To always favour the insurer','To settle claims honestly and fairly, remaining objective','To pay every claim in full','To minimise every claim'],
+        correct:1,
+        feedback:{ c:'Correct. The duty is to settle claims honestly, fairly and objectively.', w:'The duty is to settle claims honestly and fairly, staying objective.' } },
+      { q:'If an insured pressures you to overstate a claim, you should...',
+        opts:['Agree to keep them happy','Remain objective and report accurately','Ignore the claim','Repudiate immediately'],
+        correct:1,
+        feedback:{ c:'Correct. Stay objective and report the facts accurately.', w:'Remain objective and report accurately.' } }
+    ]
+  },
+  {
+    cat: 'Professional Skills',
+    title: 'Time Management',
+    sub: 'Deliver promptly in a fast service industry.',
+    map: 'General Knowledge',
+    tags: ['Productivity', 'Prioritising'],
+    blocks: [
+      { type:'p', text:'We work in a service industry where rapid response is demanded and people&rsquo;s livelihoods depend on prompt settlement. The secret to managing it is <strong>discipline</strong>.' },
+      { type:'list', title:'Manage your time', items:[
+        'Prioritise &mdash; deal with important and urgent matters first',
+        'Use a to-do list and tick items off',
+        'Focus on one task; avoid multi-tasking',
+        '&ldquo;Eat the biggest frog first&rdquo; &mdash; do the hardest, most important job early',
+        'Plan ~15 minutes ahead each day and avoid distractions',
+        'Learn to say no, involve/delegate, and look after yourself',
+        'Handle email in set blocks (the 2-minute rule)'
+      ]},
+      { type:'list', title:'Prioritising (the four boxes)', items:[
+        'Important &amp; urgent &rarr; do now',
+        'Important, not urgent &rarr; schedule it',
+        'Urgent, not important &rarr; delegate it',
+        'Neither &rarr; drop it'
+      ]}
+    ],
+    quiz: [
+      { q:'The "eat the biggest frog first" rule means...',
+        opts:['Take long lunches','Tackle the hardest / most important task first','Do the easiest task first','Avoid hard tasks'],
+        correct:1,
+        feedback:{ c:'Correct. Do the biggest, hardest task early in the day.', w:'It means tackle the hardest, most important task first.' } },
+      { q:'An urgent-but-not-important task should ideally be...',
+        opts:['Done immediately yourself','Delegated','Ignored forever','Scheduled for next month'],
+        correct:1,
+        feedback:{ c:'Correct. Urgent-but-not-important work is best delegated.', w:'Delegate urgent-but-not-important tasks where possible.' } }
+    ]
+  }
+];
+
+// ── COURSE QUIZ ──
+function buildCourseQuiz(mi, questions) {
+  let html = `<div class="quiz-wrap">
+    <div class="quiz-title">Knowledge Check</div>
+    <div class="quiz-subtitle">Test your understanding of this module.</div>`;
+  questions.forEach((q, qi) => {
+    html += `<div class="quiz-q" id="cqq-${mi}-${qi}">
+      <div class="quiz-q-num">Question ${qi+1} of ${questions.length}</div>
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-options">`;
+    q.opts.forEach((opt, oi) => {
+      const letter = ['A','B','C','D'][oi];
+      html += `<button class="quiz-opt" onclick="answerCourseQuiz(${mi},${qi},${oi},${q.correct})" id="cqo-${mi}-${qi}-${oi}">
+        <span class="opt-letter">${letter}</span>${opt}
+      </button>`;
+    });
+    html += `</div><div class="quiz-feedback" id="cqf-${mi}-${qi}"></div></div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function answerCourseQuiz(mi, qi, chosen, correct) {
+  const opts = document.querySelectorAll(`#cqq-${mi}-${qi} .quiz-opt`);
+  opts.forEach((el, i) => {
+    el.classList.add('locked');
+    if (i === correct) el.classList.add('correct');
+    else if (i === chosen && i !== correct) el.classList.add('wrong');
+  });
+  const fb = document.getElementById(`cqf-${mi}-${qi}`);
+  const isRight = chosen === correct;
+  fb.className = 'quiz-feedback show ' + (isRight ? 'correct' : 'wrong');
+  fb.innerHTML = (isRight ? '✓ ' : '✗ ') + (isRight ? courseModules[mi].quiz[qi].feedback.c : courseModules[mi].quiz[qi].feedback.w);
+  recordQuiz('course', mi, qi, isRight);
+}
+
+// ── COURSE BLOCK RENDERER ──
+function renderCourseBlocks(blocks) {
+  let html = '<div class="content-text lesson-reading">';
+  blocks.forEach(b => {
+    if (b.type === 'p') html += `<p>${b.text}</p>`;
+    else if (b.type === 'h') html += `<h3>${b.text}</h3>`;
+    else if (b.type === 'list') {
+      html += `<div class="field-group"><div class="field-group-title">${b.title}</div><ul class="field-list">`;
+      b.items.forEach(it => { html += `<li>${it}</li>`; });
+      html += `</ul></div>`;
+    }
+    else if (b.type === 'tip') html += `<div class="tip">💡 ${b.text}</div>`;
+    else if (b.type === 'callout') html += `<div class="callout"><span class="callout-icon">⭐</span><p>${b.text}</p></div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+// ── COURSE RENDER ──
+function renderCourse() {
+  const container = document.getElementById('course-content');
+  if (courseView === null) container.innerHTML = buildCourseList();
+  else container.innerHTML = buildCourseLesson(courseView);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildCourseList() {
+  const done = getCourseCompletedCount();
+  const total = courseModules.length;
+  const pct = Math.round((done / total) * 100);
+  let html = `
+    <div class="ref-intro">
+      <h2>Loss Adjusting Course</h2>
+      <p>The professional knowledge behind the job &mdash; from insurance principles to site craft. Work through each module, then take the knowledge check.</p>
+    </div>
+    <div class="course-progress">
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="progress-label">${done}/${total} done</div>
+    </div>`;
+
+  let lastCat = '';
+  html += '<div>';
+  courseModules.forEach((m, i) => {
+    if (m.cat !== lastCat) {
+      if (lastCat !== '') html += '</div>';
+      html += `<div class="course-cat">${m.cat}</div><div class="ref-grid">`;
+      lastCat = m.cat;
+    }
+    const isDone = isCourseComplete(i);
+    const isGK = m.map === 'General Knowledge';
+    html += `
+      <div class="ref-card" onclick="openCourseModule(${i})">
+        <div class="ref-card-header">
+          <div class="ref-card-num">${i+1}</div>
+          <div class="ref-card-title">
+            <h3>${m.title}</h3>
+            <p>${m.sub}</p>
+          </div>
+        </div>
+        <div class="ref-card-body">
+          <div class="ref-card-tags">
+            <span class="ref-tag ${isGK?'gk':'map'}">${isGK?'📘 General knowledge':'🔗 '+m.map}</span>
+          </div>
+          <div class="ref-card-status">
+            <span class="${isDone?'ref-status-done':'ref-status-pending'}">${isDone?'✓ Completed':'Not yet completed'}</span>
+            <button class="ref-open-btn" onclick="event.stopPropagation();openCourseModule(${i})">Start →</button>
+          </div>
+        </div>
+      </div>`;
+  });
+  html += '</div></div>';
+  return html;
+}
+
+function buildCourseLesson(i) {
+  const m = courseModules[i];
+  const isDone = isCourseComplete(i);
+  const isGK = m.map === 'General Knowledge';
+  return `
+  <div class="lesson-topbar">
+    <button class="back-link" onclick="backToCourseList()">← Back to course</button>
+    <div class="flex gap-2">
+      <button class="nav-btn" ${i===0?'disabled':''} onclick="courseNav(-1)">← Previous</button>
+      <button class="nav-btn primary" ${i===courseModules.length-1?'disabled':''} onclick="courseNav(1)">Next →</button>
+    </div>
+  </div>
+  <div class="section-panel">
+    <div class="section-header">
+      <h2>${m.title}</h2>
+      <p>${m.sub}</p>
+      <span class="map-badge">${isGK?'📘 General knowledge surrounding claims':'🔗 Links to the uClaim app: '+m.map}</span>
+    </div>
+    <div class="section-body">
+      ${renderCourseBlocks(m.blocks)}
+      ${buildCourseQuiz(i, m.quiz)}
+    </div>
+    <div class="section-footer">
+      <div style="font-size:13px;color:var(--gray-500)">Module ${i+1} of ${courseModules.length} &mdash; ${m.cat}</div>
+      <button class="complete-btn ${isDone?'done':''}" id="course-complete-${i}" onclick="toggleCourseModule(${i})">
+        ${isDone ? '✓ Module Complete' : '✦ Mark as Complete'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function openCourseModule(i) { courseView = i; renderCourse(); }
+function backToCourseList() { courseView = null; renderCourse(); }
+function courseNav(dir) {
+  const next = courseView + dir;
+  if (next < 0 || next >= courseModules.length) return;
+  courseView = next;
+  renderCourse();
+}
+function completeCourseModule(i) {
+  courseMarkComplete(i);
+  const btn = document.getElementById('course-complete-' + i);
+  if (btn) { btn.innerHTML = '✓ Module Complete'; btn.classList.add('done'); }
+}
+// Toggle: marks module complete, or un-marks if already complete
+function toggleCourseModule(i) {
+  const p = loadCourseProgress();
+  if (p[i]) delete p[i]; else p[i] = true;
+  saveCourseProgress(p);
+  const done = !!p[i];
+  const btn = document.getElementById('course-complete-' + i);
+  if (btn) {
+    btn.classList.toggle('done', done);
+    btn.innerHTML = done ? '✓ Module Complete' : '✦ Mark as Complete';
+  }
+}
+
+// ════════════════════════════════════════════════
+//  ACCOUNTS & ADMIN
+//  NOTE: This is a CLIENT-SIDE system. Accounts,
+//  passwords and results are stored in this browser's
+//  localStorage. It is suitable for on-device training
+//  (e.g. a shared training PC), NOT a secure central
+//  server. For multi-device / centralised reporting a
+//  back-end would be required.
+// ════════════════════════════════════════════════
+let SESSION = null;
+
+function loadUsers() { try { return JSON.parse(localStorage.getItem('uclaim_users') || '{}'); } catch(e) { return {}; } }
+function saveUsers(u) { localStorage.setItem('uclaim_users', JSON.stringify(u)); }
+function seedUsers() {
+  const u = loadUsers();
+  let changed = false;
+  if (!u.admin) { u.admin = { password: 'admin123', role: 'admin', name: 'Administrator' }; changed = true; }
+  const hasStandard = Object.keys(u).some(k => u[k].role === 'standard');
+  if (!hasStandard) { u.trainee = { password: 'trainee123', role: 'standard', name: 'Demo Trainee' }; changed = true; }
+  if (changed) saveUsers(u);
+}
+function loadSession() { try { return JSON.parse(localStorage.getItem('uclaim_session') || 'null'); } catch(e) { return null; } }
+function saveSession(s) { if (s) localStorage.setItem('uclaim_session', JSON.stringify(s)); else localStorage.removeItem('uclaim_session'); }
+function currentUsername() { return SESSION ? SESSION.username : '_anon'; }
+
+function attemptLogin() {
+  const un = document.getElementById('login-user').value.trim();
+  const pw = document.getElementById('login-pass').value;
+  const u = loadUsers();
+  const err = document.getElementById('login-error');
+  if (!un || !u[un] || u[un].password !== pw) {
+    err.textContent = 'Incorrect username or password.';
+    err.style.display = 'block';
+    return;
+  }
+  SESSION = { username: un, role: u[un].role, name: u[un].name };
+  saveSession(SESSION);
+  err.style.display = 'none';
+  document.getElementById('login-pass').value = '';
+  enterApp();
+}
+function logout() { saveSession(null); SESSION = null; location.reload(); }
+
+// ── NAVIGATION PERMISSIONS (per role) ──
+const NAV_TABS = [
+  { key: 'tutorial', label: '📋 Guided Tutorial' },
+  { key: 'reference', label: '📚 Reference Library' },
+  { key: 'course', label: '🎓 Loss Adjusting Course' }
+];
+function defaultPermissions() {
+  return {
+    standard: { tutorial: true, reference: true, course: true },
+    admin: { tutorial: true, reference: true, course: true }
+  };
+}
+function loadPermissions() {
+  const def = defaultPermissions();
+  try {
+    const saved = JSON.parse(localStorage.getItem('uclaim_permissions') || 'null');
+    if (!saved) return def;
+    ['standard', 'admin'].forEach(r => { saved[r] = Object.assign({}, def[r], saved[r] || {}); });
+    return saved;
+  } catch(e) { return def; }
+}
+function savePermissions(p) { localStorage.setItem('uclaim_permissions', JSON.stringify(p)); }
+function canAccess(role, tab) {
+  if (tab === 'admin') return role === 'admin';
+  const p = loadPermissions();
+  return !!(p[role] && p[role][tab]);
+}
+function firstAllowedTab(role) {
+  const t = NAV_TABS.find(t => canAccess(role, t.key));
+  return t ? t.key : null;
+}
+function applyNavPermissions(role) {
+  NAV_TABS.forEach(t => {
+    const el = document.getElementById('tab-' + t.key);
+    if (el) el.classList.toggle('hidden', !canAccess(role, t.key));
+  });
+  const adminTab = document.getElementById('tab-admin');
+  if (adminTab) adminTab.classList.toggle('hidden', role !== 'admin');
+}
+function setPerm(role, tab, val) {
+  const p = loadPermissions();
+  if (!p[role]) p[role] = {};
+  p[role][tab] = val;
+  savePermissions(p);
+  if (SESSION) applyNavPermissions(SESSION.role);
+}
+function showNoAccessNotice() {
+  ['reference', 'course', 'admin'].forEach(v => document.getElementById('view-' + v).classList.add('hidden'));
+  document.getElementById('view-tutorial').classList.remove('hidden');
+  document.getElementById('progress-wrap').classList.add('hidden');
+  const nav = document.querySelector('#view-tutorial .tutorial-nav');
+  if (nav) nav.style.display = 'none';
+  document.getElementById('tutorial-content').innerHTML =
+    '<div style="text-align:center;padding:60px 20px;color:var(--gray-500)">' +
+    '<h2 style="color:var(--navy);margin-bottom:10px">No sections enabled</h2>' +
+    '<p>Your account doesn&rsquo;t currently have access to any training sections.<br>Please contact your administrator.</p></div>';
+}
+
+function enterApp() {
+  document.getElementById('login-overlay').classList.add('hidden');
+  const chip = document.getElementById('user-chip');
+  chip.textContent = SESSION.name + ' · ' + (SESSION.role === 'admin' ? 'Admin' : 'Trainee');
+  chip.classList.remove('hidden');
+  document.getElementById('logout-btn').classList.remove('hidden');
+  applyNavPermissions(SESSION.role);
+  init();
+  if (SESSION.role === 'admin') {
+    switchMode('admin');
+  } else {
+    const first = firstAllowedTab('standard');
+    if (first) switchMode(first);
+    else showNoAccessNotice();
+  }
+}
+
+function boot() {
+  seedUsers();
+  const s = loadSession();
+  const users = loadUsers();
+  if (s && users[s.username]) {
+    SESSION = { username: s.username, role: users[s.username].role, name: users[s.username].name };
+    enterApp();
+  } else {
+    SESSION = null;
+    document.getElementById('login-overlay').classList.remove('hidden');
+  }
+}
+
+// ── QUIZ RESULTS (recorded per user) ──
+function quizKey(un) { return 'uclaim_quiz__' + (un || currentUsername()); }
+function loadQuiz(un) { try { return JSON.parse(localStorage.getItem(quizKey(un)) || '{}'); } catch(e) { return {}; } }
+function recordQuiz(domain, idx, qi, correct) {
+  if (!SESSION) return;
+  const q = loadQuiz();
+  q[domain] = q[domain] || {};
+  q[domain][idx] = q[domain][idx] || {};
+  q[domain][idx][qi] = correct;
+  localStorage.setItem(quizKey(), JSON.stringify(q));
+}
+function quizStats(un) {
+  const q = loadQuiz(un);
+  let answered = 0, correct = 0;
+  ['tut', 'course'].forEach(d => {
+    const dom = q[d] || {};
+    Object.keys(dom).forEach(idx => {
+      Object.keys(dom[idx]).forEach(qi => { answered++; if (dom[idx][qi]) correct++; });
+    });
+  });
+  return { answered, correct };
+}
+function totalTutorialQuestions() { return quizData.reduce((a, q) => a + q.length, 0); }
+function totalCourseQuestions() { return courseModules.reduce((a, m) => a + m.quiz.length, 0); }
+function userTutorialDone(un) { try { return Object.values(JSON.parse(localStorage.getItem('uclaim_progress__' + un) || '{}')).filter(Boolean).length; } catch(e) { return 0; } }
+function userCourseDone(un) { try { return Object.values(JSON.parse(localStorage.getItem('uclaim_course_progress__' + un) || '{}')).filter(Boolean).length; } catch(e) { return 0; } }
+
+// ── ADMIN DASHBOARD ──
+function renderAdmin() {
+  const c = document.getElementById('admin-content');
+  if (!SESSION || SESSION.role !== 'admin') { c.innerHTML = '<p style="padding:40px;text-align:center;color:var(--gray-500)">Admins only.</p>'; return; }
+  const users = loadUsers();
+  const standards = Object.keys(users).filter(k => users[k].role === 'standard');
+  const totQ = totalTutorialQuestions() + totalCourseQuestions();
+
+  const rows = standards.length ? standards.map(un => {
+    const tDone = userTutorialDone(un), cDone = userCourseDone(un);
+    const qs = quizStats(un);
+    const pct = qs.answered ? Math.round(qs.correct / qs.answered * 100) : 0;
+    return `<tr>
+      <td>${users[un].name}</td>
+      <td>${un}</td>
+      <td>${tDone}/${TOTAL_SECTIONS}</td>
+      <td>${cDone}/${courseModules.length}</td>
+      <td><span class="score-bar"><i style="width:${pct}%"></i></span>${qs.correct}/${qs.answered} (${pct}%)</td>
+      <td>
+        <button class="mini-btn" onclick="adminResetUser('${un}')">Reset progress</button>
+        <button class="mini-btn danger" onclick="adminDeleteUser('${un}')">Delete</button>
+      </td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="6" style="color:var(--gray-500)">No standard trainees yet. Create one below.</td></tr>`;
+
+  const allRows = Object.keys(users).map(un => `<tr>
+      <td>${users[un].name}</td>
+      <td>${un}</td>
+      <td><span class="pill ${users[un].role}">${users[un].role}</span></td>
+      <td>
+        <button class="mini-btn" onclick="adminResetPassword('${un}')">Reset password</button>
+        ${un === SESSION.username ? '<span style="color:var(--gray-400);font-size:12px">(you)</span>' : `<button class="mini-btn danger" onclick="adminDeleteUser('${un}')">Delete</button>`}
+      </td>
+    </tr>`).join('');
+
+  const perms = loadPermissions();
+  const navRows = NAV_TABS.map(t => `<tr>
+      <td>${t.label}</td>
+      <td style="text-align:center"><input type="checkbox" class="perm-check" ${perms.standard[t.key] ? 'checked' : ''} onchange="setPerm('standard','${t.key}',this.checked)"></td>
+      <td style="text-align:center"><input type="checkbox" class="perm-check" ${perms.admin[t.key] ? 'checked' : ''} onchange="setPerm('admin','${t.key}',this.checked)"></td>
+    </tr>`).join('') + `<tr>
+      <td>🛠 Admin Dashboard</td>
+      <td style="text-align:center;color:var(--gray-400)">&mdash;</td>
+      <td style="text-align:center;color:var(--green);font-weight:700">Always</td>
+    </tr>`;
+
+  c.innerHTML = `
+    <div class="ref-intro"><h2>Admin Dashboard</h2><p>Manage trainee accounts and review their training results.</p></div>
+
+    <div class="admin-section">
+      <h3>🔐 Navigation Permissions</h3>
+      <p style="font-size:13px;color:var(--gray-500);margin-bottom:14px">Choose which sections each role sees in the top navigation. Changes apply immediately and are saved. The Admin Dashboard is always available to admins.</p>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead><tr><th>Section</th><th style="text-align:center">Standard</th><th style="text-align:center">Admin</th></tr></thead>
+          <tbody>${navRows}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>📊 Trainee Results</h3>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Username</th><th>Tutorial</th><th>Course</th><th>Quiz score</th><th>Actions</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;color:var(--gray-500);margin-top:12px">Tutorial = ${TOTAL_SECTIONS} sections &middot; Course = ${courseModules.length} modules &middot; Quiz pool = ${totQ} questions. Results update as trainees answer questions and complete sections on this device.</p>
+    </div>
+
+    <div class="admin-section">
+      <h3>➕ Create Account</h3>
+      <div class="admin-form">
+        <div class="login-field"><label>Full name</label><input id="new-name" type="text"></div>
+        <div class="login-field"><label>Username</label><input id="new-user" type="text"></div>
+        <div class="login-field"><label>Password</label><input id="new-pass" type="text"></div>
+        <div class="login-field"><label>Role</label>
+          <select id="new-role" style="font-size:14px;padding:11px 13px;border:1.5px solid var(--gray-200);border-radius:9px;width:100%;font-family:inherit;color:var(--gray-700);background:#fff">
+            <option value="standard">Standard (trainee)</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button class="login-btn" style="width:auto;padding:11px 20px" onclick="adminCreateUser()">Create</button>
+      </div>
+      <div id="admin-msg" style="font-size:13px;margin-top:12px"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>👥 All Accounts</h3>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Actions</th></tr></thead>
+          <tbody>${allRows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function adminMsg(text, ok) {
+  const m = document.getElementById('admin-msg');
+  if (!m) return;
+  m.textContent = text;
+  m.style.color = ok ? '#166534' : '#991B1B';
+}
+function adminCreateUser() {
+  const name = document.getElementById('new-name').value.trim();
+  const un = document.getElementById('new-user').value.trim();
+  const pw = document.getElementById('new-pass').value;
+  const role = document.getElementById('new-role').value;
+  if (!name || !un || !pw) { adminMsg('Please fill in name, username and password.', false); return; }
+  const u = loadUsers();
+  if (u[un]) { adminMsg('That username already exists.', false); return; }
+  u[un] = { password: pw, role: role, name: name };
+  saveUsers(u);
+  renderAdmin();
+  adminMsg('Account "' + un + '" created.', true);
+}
+function adminDeleteUser(un) {
+  if (un === SESSION.username) { alert('You cannot delete the account you are currently logged in with.'); return; }
+  if (!confirm('Delete account "' + un + '" and all of its training results? This cannot be undone.')) return;
+  const u = loadUsers(); delete u[un]; saveUsers(u);
+  localStorage.removeItem('uclaim_progress__' + un);
+  localStorage.removeItem('uclaim_course_progress__' + un);
+  localStorage.removeItem('uclaim_quiz__' + un);
+  renderAdmin();
+}
+function adminResetUser(un) {
+  if (!confirm('Reset all training progress and quiz results for "' + un + '"?')) return;
+  localStorage.removeItem('uclaim_progress__' + un);
+  localStorage.removeItem('uclaim_course_progress__' + un);
+  localStorage.removeItem('uclaim_quiz__' + un);
+  renderAdmin();
+}
+function adminResetPassword(un) {
+  const np = prompt('Enter a new password for "' + un + '":');
+  if (np === null || np === '') return;
+  const u = loadUsers(); if (!u[un]) return; u[un].password = np; saveUsers(u);
+  alert('Password updated for ' + un + '.');
+}
+
+// ── INIT ──
+function init() {
+  // Resume from last section if progress exists
+  const p = loadProgress();
+  const completedKeys = Object.keys(p).filter(k => p[k]).map(Number);
+  if (completedKeys.length > 0) {
+    const lastDone = Math.max(...completedKeys);
+    currentSection = Math.min(lastDone + 1, TOTAL_SECTIONS - 1);
+  }
+  renderTutorial();
+  updateProgressBar();
+}
+
+boot();
+</script>
+</body>
+</html>
