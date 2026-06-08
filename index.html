@@ -994,6 +994,52 @@ body {
 .score-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--navy), var(--blue)); }
 .perm-check { width: 18px; height: 18px; cursor: pointer; accent-color: var(--navy); }
 
+/* ── LOSS ADJUSTOR / ASSESSMENT ── */
+.take-assess-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; border: none;
+  border-radius: 10px; padding: 14px 26px; font-size: 15px; font-weight: 700;
+  cursor: pointer; font-family: inherit; box-shadow: 0 4px 16px rgba(22,163,74,0.25);
+  transition: transform 0.15s;
+}
+.take-assess-btn:hover { transform: translateY(-1px); }
+.la-banner {
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: #fff; border-radius: 14px; padding: 24px 28px; margin-bottom: 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+}
+.la-banner h2 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.la-banner p { opacity: 0.85; font-size: 13.5px; max-width: 520px; }
+.footer-link { color: var(--blue-light); text-decoration: none; opacity: 0.7; font-size: 12px; }
+.footer-link:hover { opacity: 1; text-decoration: underline; }
+
+.assess-overlay { position: fixed; inset: 0; z-index: 450; background: var(--gray-50); overflow-y: auto; }
+.assess-inner { max-width: 820px; margin: 0 auto; padding: 36px 22px 90px; }
+.assess-head {
+  background: linear-gradient(135deg, var(--navy), var(--navy-light)); color: #fff;
+  border-radius: 14px; padding: 28px 32px; margin-bottom: 24px;
+}
+.assess-head h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.assess-head p { opacity: 0.88; font-size: 14px; line-height: 1.55; }
+.assess-q { background: #fff; border: 1px solid var(--gray-200); border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.assess-q .qn { font-size: 11.5px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.assess-q .qt { font-size: 15px; font-weight: 600; color: var(--gray-900); margin-bottom: 12px; line-height: 1.5; }
+.assess-opt { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1.5px solid var(--gray-200); border-radius: 8px; margin-bottom: 7px; cursor: pointer; font-size: 14px; color: var(--gray-700); }
+.assess-opt:hover { border-color: var(--blue); background: var(--blue-pale); }
+.assess-opt input { accent-color: var(--navy); }
+.assess-input, .assess-textarea { width: 100%; border: 1.5px solid var(--gray-200); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; color: var(--gray-700); }
+.assess-input:focus, .assess-textarea:focus { outline: none; border-color: var(--blue); }
+.assess-textarea { height: 92px; resize: vertical; }
+.assess-section-title { font-size: 16px; font-weight: 800; color: var(--navy); margin: 30px 0 6px; }
+.assess-section-sub { font-size: 12.5px; color: var(--gray-500); margin-bottom: 14px; }
+.result-score { font-size: 44px; font-weight: 800; line-height: 1; }
+.result-badge { display: inline-block; padding: 6px 18px; border-radius: 99px; font-weight: 800; font-size: 14px; }
+.result-badge.pass { background: #DCFCE7; color: #166534; }
+.result-badge.fail { background: #FEE2E2; color: #991B1B; }
+.rev-correct { color: #166534; font-weight: 600; }
+.rev-wrong { color: #991B1B; font-weight: 600; }
+.rev-item { background: #fff; border: 1px solid var(--gray-200); border-radius: 10px; padding: 12px 16px; margin-bottom: 8px; font-size: 13.5px; }
+
 /* Utility */
 .hidden { display: none !important; }
 .text-center { text-align: center; }
@@ -1091,6 +1137,16 @@ body {
   </div>
 </div>
 
+<!-- ASSESSMENT FULLSCREEN OVERLAY -->
+<div id="assessment-overlay" class="assess-overlay hidden">
+  <div class="assess-inner" id="assessment-content"></div>
+</div>
+
+<!-- RESULTS ADMIN FULLSCREEN OVERLAY -->
+<div id="results-overlay" class="assess-overlay hidden">
+  <div class="assess-inner" id="results-content"></div>
+</div>
+
 <!-- MODAL (reference view) -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal-box" id="modal-box">
@@ -1101,6 +1157,7 @@ body {
 <!-- FOOTER -->
 <footer class="app-footer">
   Built for uClaim &nbsp;|&nbsp; Maximillian Hornby &nbsp;|&nbsp; <a href="mailto:max@cmsupport.co.za">max@cmsupport.co.za</a>
+  <br><a href="#" class="footer-link" onclick="openResultsAdmin();return false;">Results Admin</a>
 </footer>
 
 <script>
@@ -2930,6 +2987,13 @@ function buildCourseList() {
     <div class="course-progress">
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div class="progress-label">${done}/${total} done</div>
+    </div>
+    <div class="la-banner" style="margin-bottom:24px">
+      <div>
+        <h2>📝 Formal Assessment</h2>
+        <p>When you have worked through the modules, sit the 100-mark Loss Adjustor assessment drawn from the Principles &amp; Practice of Loss Adjusting manual. Pass mark 60%.</p>
+      </div>
+      <button class="take-assess-btn" onclick="openAssessment()">📝 Take Assessment</button>
     </div>`;
 
   let lastCat = '';
@@ -2986,6 +3050,7 @@ function buildCourseLesson(i) {
     </div>
     <div class="section-body">
       ${renderCourseBlocks(m.blocks)}
+      ${m.phone ? `<div style="margin:18px 0">${phoneFrame(m.phone)}</div>` : ''}
       ${buildCourseQuiz(i, m.quiz)}
     </div>
     <div class="section-footer">
@@ -3329,6 +3394,660 @@ function adminResetPassword(un) {
   if (np === null || np === '') return;
   const u = loadUsers(); if (!u[un]) return; u[un].password = np; saveUsers(u);
   alert('Password updated for ' + un + '.');
+}
+
+// ════════════════════════════════════════════════
+//  LOSS ADJUSTING MANUAL SECTIONS
+//  Study sections drawn from the "Principles and
+//  Practice of Loss Adjusting" manual, mapped to the
+//  uClaim app sections. These are merged into the
+//  Loss Adjusting Course below, alongside the formal
+//  100-mark assessment.
+// ════════════════════════════════════════════════
+const laSections = [
+  {
+    title: 'Section 1 — Site Inspection & Preliminary Claims Handling',
+    sub: 'Maps to App Section 1 — Site Inspection Checklist',
+    blocks: [
+      { type:'p', text:'As a loss adjuster you are the <strong>agent of the insurer</strong> and, in effect, a <strong>claims auditor and facilitator</strong> &mdash; impartial, fair and objective. Before you attend site you gather the insured&rsquo;s particulars, full policy cover (sums insured, warranties, endorsements, excesses and deductibles), a brief description of the loss (time, date, situation) and the insured&rsquo;s estimate.' },
+      { type:'h', text:'The four stages of a claim' },
+      { type:'list', title:'Every claim moves through', items:[
+        'Investigation of the circumstances of the claim',
+        'Determination of policy liability',
+        'Investigation and confirmation of quantum',
+        'Negotiation and settlement'
+      ]},
+      { type:'h', text:'Overview, then detail' },
+      { type:'list', title:'On site you establish', items:[
+        'Background &mdash; premises, occupation, type of business, family details',
+        'Previous claims and the insured&rsquo;s insurance history',
+        'How, when, where and why the loss occurred',
+        'Identities of witnesses and external parties (police, fire brigade, forensic)',
+        'The extent of damage, recorded with photographs'
+      ]},
+      { type:'h', text:'Soft evidence vs hard evidence' },
+      { type:'list', title:'Two categories', items:[
+        '<strong>Soft</strong> &mdash; easily gathered information: your notes, background, names &amp; numbers, sketches',
+        '<strong>Hard</strong> &mdash; secured proof that will not be lost: photographs, signed statements, documentation, video',
+        'Your <strong>notes are possibly the most valuable evidence</strong> &mdash; date them, number the pages and write in ink'
+      ]},
+      { type:'h', text:'Spotting the problem claim' },
+      { type:'list', title:'Test the version of events', items:[
+        'Does it follow a logical sequence and is it free of contradiction?',
+        'Does it tally with witnesses, the police and the fire brigade?',
+        'Is the extent of loss consistent with the damage?',
+        'Never approach a claim subjectively. If something looks suspicious, advise the <strong>insurer first</strong> &mdash; do not reveal your views to the insured.'
+      ]},
+      { type:'callout', text:'In the app: the <strong>Site Inspection Checklist</strong> is where this preliminary fact-gathering becomes a structured record &mdash; capture the site, security and required documents so nothing is lost before you leave.' }
+    ],
+    phone: `<div class="phone-app-bar"><h4>Site Inspection Checklist</h4><p>Preliminary capture</p></div>
+      <div class="phone-content">
+        <div class="phone-section-title">Loss Details</div>
+        <div class="phone-field"><label>Date &amp; time of loss</label><input class="phone-input" placeholder="When did it happen?"></div>
+        <div class="phone-field"><label>How / where / why</label><textarea class="phone-textarea" placeholder="Circumstances of the loss..."></textarea></div>
+        <div class="phone-field"><label>Witnesses</label><input class="phone-input" placeholder="Names &amp; contact numbers"></div>
+        <button class="phone-btn blue">Save</button>
+      </div>`,
+    practice: [
+      { q:'The loss adjuster is the agent of whom?', opts:['The insured','The insurer','The broker','The court'], correct:1,
+        feedback:{ c:'Correct. The adjuster is the insurer&rsquo;s agent and acts on the insurer&rsquo;s mandate.', w:'The adjuster is the agent of the insurer.' } },
+      { q:'"Your notes" are an example of which type of evidence?', opts:['Hard evidence','Soft evidence','Privileged evidence','Forensic evidence'], correct:1,
+        feedback:{ c:'Correct. Notes are soft evidence &mdash; but among the most valuable you hold.', w:'Notes are soft evidence.' } },
+      { q:'If you suspect a fraudulent claim while on site, you should first...', opts:['Confront the insured','Advise the insurer','Reject the claim','Tell the police'], correct:1,
+        feedback:{ c:'Correct. Advise the insurer first and never tip off the insured.', w:'Advise the insurer first; do not reveal your views to the insured.' } }
+    ]
+  },
+  {
+    title: 'Section 2 — Damage Assessment & Establishing Quantum',
+    sub: 'Maps to App Section 2 — Damaged Buildings',
+    blocks: [
+      { type:'p', text:'App Section 2 documents the building and its damage. The manual treats quantum as an <strong>audit</strong>: establish the extent of loss, establish ownership / insurable interest, establish the cost of repair or loss, then translate it into money in terms of the policy.' },
+      { type:'h', text:'Work macro, then micro' },
+      { type:'list', title:'Macro overview', items:[
+        'Does the claim fit the insured&rsquo;s lifestyle, operation and the size of the premises?',
+        'Does the reported loss fit the circumstances?',
+        'Does it reconcile to eyewitnesses, police records and forensic evidence?'
+      ]},
+      { type:'list', title:'Micro investigation', items:[
+        'Examine the insured&rsquo;s documentation',
+        'Use stock-control records, invoices and asset registers to verify ownership',
+        'Complete stock reconciliations to establish the extent of loss'
+      ]},
+      { type:'h', text:'Cardinal rules of quantum' },
+      { type:'list', title:'Never forget', items:[
+        'The <strong>insured</strong> must prove ownership / insurable interest',
+        'The adjuster <strong>verifies</strong> the claim &mdash; never <strong>formulates</strong> it on the insured&rsquo;s behalf',
+        'Check quotations/invoices are reasonable and not an improvement on what was lost (indemnity)',
+        'No <strong>betterment</strong> &mdash; the insured may not profit; any surplus benefits the insurer, not the insured (unless the policy says otherwise)'
+      ]},
+      { type:'callout', text:'In the app: capture building details, area condition, damage m&sup2; and clear photos so the desktop assessor can audit quantum accurately.' }
+    ],
+    phone: `<div class="phone-app-bar"><h4>Damaged Area</h4><p>Building &amp; damage</p></div>
+      <div class="phone-content">
+        <div class="phone-section-title">Damage</div>
+        <div class="phone-field"><label>Is there damage?</label>
+          <div class="phone-yn-btns"><button class="phone-yn-btn yes active">Yes</button><button class="phone-yn-btn no">No</button></div>
+        </div>
+        <div class="phone-field"><label>Damage m&sup2;</label><input class="phone-input" placeholder="e.g. 45"></div>
+        <div class="phone-field"><label>Description</label><textarea class="phone-textarea" placeholder="Describe the damage in detail..."></textarea></div>
+        <button class="phone-btn blue">Save</button>
+      </div>`,
+    practice: [
+      { q:'Who must prove ownership or insurable interest in the item claimed?', opts:['The adjuster','The insured','The insurer','The broker'], correct:1,
+        feedback:{ c:'Correct. The onus is on the insured to prove ownership / insurable interest.', w:'The insured must prove ownership / insurable interest.' } },
+      { q:'The adjuster should never do which of these on the insured&rsquo;s behalf?', opts:['Verify the claim','Formulate the claim','Photograph the damage','Report to the insurer'], correct:1,
+        feedback:{ c:'Correct. The adjuster verifies but never formulates the insured&rsquo;s claim.', w:'The adjuster must never formulate the claim for the insured.' } },
+      { q:'"Betterment" refers to a situation where the insured would...', opts:['Be under-indemnified','Profit / be better off than before the loss','Lose their cover','Pay a higher excess'], correct:1,
+        feedback:{ c:'Correct. Betterment means the insured profits &mdash; which indemnity does not allow.', w:'Betterment means the insured would be better off than before the loss.' } }
+    ]
+  },
+  {
+    title: 'Section 3 — Assets, Salvage & Quantum Verification',
+    sub: 'Maps to App Section 3 — Damaged Assets',
+    blocks: [
+      { type:'p', text:'App Section 3 captures standalone assets (generators, tanks, plant). The manual&rsquo;s quantum rules apply: verify value, watch for betterment, and remember salvage and accurate financial management.' },
+      { type:'h', text:'Salvage & recoveries' },
+      { type:'list', title:'Key points', items:[
+        'Where an insured is indemnified for a <strong>total loss</strong>, they cannot also keep the salvage &mdash; that would exceed indemnity',
+        'When insurers sell damaged stock, machinery or vehicles they are exercising <strong>subrogation</strong> rights in support of indemnity'
+      ]},
+      { type:'h', text:'Estimates & interim payments' },
+      { type:'list', title:'Financial management', items:[
+        'Provide accurate estimates &mdash; never deliberately over- or under-estimate; build the estimate up',
+        'Interim payments only on money the insured has <strong>actually spent</strong>',
+        'An interim payment must not exceed the insurer&rsquo;s ultimate liability (after average and excess), and cover must be in force'
+      ]},
+      { type:'callout', text:'In the app: record each asset&rsquo;s make, serial / VIN, value and condition in Section 3 so its indemnity value &mdash; and any salvage &mdash; can be assessed.' }
+    ],
+    practice: [
+      { q:'An insured fully indemnified for a total loss may also keep the salvage.', opts:['True','False'], correct:1,
+        feedback:{ c:'Correct. Keeping the salvage as well would exceed indemnity.', w:'False &mdash; that would give the insured more than indemnity.' } },
+      { q:'An interim payment should be made only on...', opts:['The full sum insured','Money the insured has actually spent','The adjuster&rsquo;s estimate','The broker&rsquo;s request'], correct:1,
+        feedback:{ c:'Correct. Interim payments reimburse actual expenditure incurred.', w:'Only on money actually spent by the insured.' } },
+      { q:'When insurers sell damaged stock they are exercising which right?', opts:['Contribution','Subrogation','Estoppel','Average'], correct:1,
+        feedback:{ c:'Correct. Selling salvage is an exercise of subrogation in support of indemnity.', w:'They are exercising subrogation rights.' } }
+    ]
+  },
+  {
+    title: 'Section 4 — Reporting & the Executive Summary',
+    sub: 'Maps to App Section 4 — Executive Summary',
+    blocks: [
+      { type:'p', text:'The <strong>report is the adjuster&rsquo;s product</strong>. App Section 4 &mdash; the Executive Summary &mdash; is where you tell the claim&rsquo;s story so the insurer can settle with the minimum of referral and delay.' },
+      { type:'h', text:'A balanced, logical report' },
+      { type:'list', title:'When recommending acceptance or rejection', items:[
+        'State why the claim should be considered, and note any restrictive endorsements or warranties',
+        'For a recommended rejection, set out each fact then the contradictory evidence, referencing your annexures',
+        'Then give your view on liability &mdash; facts first, opinion clearly separated'
+      ]},
+      { type:'h', text:'It is the insurer&rsquo;s decision' },
+      { type:'list', title:'Remember', items:[
+        'The adjuster <strong>recommends</strong>; the insurer / underwriter <strong>decides</strong> to accept or repudiate',
+        'Always refer to the specific policy term or condition breached and the remedy it provides'
+      ]},
+      { type:'h', text:'Privilege' },
+      { type:'list', title:'Contemplation of litigation', items:[
+        'If litigation is contemplated, the insurer may route the report via attorneys headed &ldquo;Confidential &mdash; in contemplation of litigation / for legal advice&rdquo; so it is <strong>privileged</strong>',
+        'The privilege belongs to the <strong>insurer</strong>, not the adjuster'
+      ]},
+      { type:'callout', text:'In the app: use the Executive Summary (and Voice Notes) to give the desktop assessor a complete, balanced narrative of the event and the damage observed.' }
+    ],
+    phone: `<div class="phone-app-bar"><h4>Executive Summary</h4><p>Your narrative</p></div>
+      <div class="phone-content">
+        <div class="phone-section-title">Describe the event</div>
+        <div class="phone-field"><label>Cause of loss (in your own words)</label><textarea class="phone-textarea" placeholder="What happened..."></textarea></div>
+        <div class="phone-field"><label>Damage observed</label><textarea class="phone-textarea" placeholder="What you saw on site..."></textarea></div>
+        <div class="phone-field"><label>Voice note</label>
+          <div class="phone-media-row"><div class="phone-media-btn"><span class="media-icon">🎙️</span>Record</div></div>
+        </div>
+        <button class="phone-btn blue">Save</button>
+      </div>`,
+    practice: [
+      { q:'Who makes the final decision to repudiate a claim?', opts:['The loss adjuster','The insurer / underwriter','The broker','The witness'], correct:1,
+        feedback:{ c:'Correct. The adjuster recommends; the insurer decides.', w:'The insurer / underwriter makes the decision to repudiate.' } },
+      { q:'The loss adjuster&rsquo;s main "product" is...', opts:['The photographs','The report','The quotation','The estimate'], correct:1,
+        feedback:{ c:'Correct. The report is the adjuster&rsquo;s product.', w:'The report is the adjuster&rsquo;s product.' } },
+      { q:'A report routed through attorneys in contemplation of litigation becomes...', opts:['Public','Privileged','Invalid','Optional'], correct:1,
+        feedback:{ c:'Correct. It becomes privileged and protected from discovery.', w:'It becomes privileged.' } }
+    ]
+  },
+  {
+    title: 'Section 5 — Value at Risk & Indemnity',
+    sub: 'Maps to App Section 5 — VAR Property',
+    blocks: [
+      { type:'p', text:'<strong>Indemnity is the controlling principle of insurance</strong> (Castellain v Preston): place the insured in the same financial position after the loss as immediately before it &mdash; no more, no less. App Section 5 (VAR) captures the replacement-cost data behind this.' },
+      { type:'h', text:'How indemnity is provided' },
+      { type:'list', title:'Four methods', items:[
+        '<strong>Cash</strong>, <strong>Repair</strong>, <strong>Replacement</strong>, <strong>Reinstatement</strong>',
+        'The choice is usually the <strong>insurer&rsquo;s</strong>; the insured cannot insist on payment where the policy gives the insurer the option'
+      ]},
+      { type:'h', text:'Measuring indemnity' },
+      { type:'list', title:'The rules', items:[
+        'Value is taken at the <strong>date and place of the loss</strong> &mdash; not original cost',
+        'Buildings / machinery: replacement cost less <strong>wear &amp; tear</strong> and any <strong>betterment</strong>',
+        'No allowance for sentimental value or prospective profit'
+      ]},
+      { type:'h', text:'Average / underinsurance' },
+      { type:'list', title:'Why VAR matters', items:[
+        'If the sum insured is less than the replacement value, <strong>average</strong> applies and the claim is reduced proportionally',
+        'The insured carries the shortfall &mdash; which is exactly why an accurate VAR is so important'
+      ]},
+      { type:'callout', text:'In the app: Section 5 captures the Perimeter then Areas, choosing building descriptions that feed the VAR Indicator &mdash; an accurate description drives an accurate replacement-cost figure and helps avoid under-insurance.' }
+    ],
+    phone: `<div class="phone-app-bar"><h4>VAR Property</h4><p>Value at Risk</p></div>
+      <div class="phone-content">
+        <div class="phone-section-title">Area</div>
+        <div class="phone-field"><label>Building Value Range</label>
+          <div class="phone-select-wrap"><select class="phone-select"><option>Lower</option><option>Middle</option><option>Upper</option><option>Executive</option></select></div>
+        </div>
+        <div class="phone-field"><label>Building Size m&sup2;</label><input class="phone-input" placeholder="e.g. 450"></div>
+        <button class="phone-btn blue">Save Area</button>
+      </div>`,
+    practice: [
+      { q:'Indemnity value of property is based on its value at the...', opts:['Original purchase date','Date of the loss','Date of the policy','End of the policy'], correct:1,
+        feedback:{ c:'Correct. Value at the date (and place) of the loss &mdash; not original cost.', w:'It is based on the value at the date of the loss.' } },
+      { q:'Which of these is NOT one of the four methods of providing indemnity?', opts:['Cash','Repair','Reinstatement','Depreciation'], correct:3,
+        feedback:{ c:'Correct. The four methods are cash, repair, replacement and reinstatement.', w:'Depreciation is not a method &mdash; the four are cash, repair, replacement, reinstatement.' } },
+      { q:'If a property is underinsured, which condition reduces the claim proportionally?', opts:['Subrogation','Average','Contribution','Estoppel'], correct:1,
+        feedback:{ c:'Correct. Average applies when the sum insured is too low.', w:'Average reduces claims proportionally when underinsured.' } }
+    ]
+  },
+  {
+    title: 'Section 6 — Documentation, Confidentiality & POPI',
+    sub: 'Maps to App Section 6 — Extra Documents',
+    blocks: [
+      { type:'p', text:'App Section 6 captures documents handed over on site. Handle them &mdash; and the personal information in them &mdash; correctly.' },
+      { type:'h', text:'Document handling' },
+      { type:'list', title:'Good practice', items:[
+        'Copy documents before returning them; record the date and source in ink; number the pages',
+        'Get acknowledgement of any returned originals &mdash; never destroy or mislay evidence'
+      ]},
+      { type:'h', text:'Protection of Personal Information Act (POPI)' },
+      { type:'list', title:'Your obligations', items:[
+        'The insurer is the <strong>responsible party</strong>; the loss adjuster is an <strong>operator</strong>',
+        'Investigate only with the insurer&rsquo;s authority',
+        'You do <strong>not</strong> need the insured&rsquo;s consent to investigate a claim',
+        'Keep personal information confidential &mdash; reports go only to those who <strong>need to know</strong>'
+      ]},
+      { type:'callout', text:'In the app: name each document clearly in Section 6 and keep it within the claim record &mdash; POPI means information is handled and shared on a need-to-know basis.' }
+    ],
+    practice: [
+      { q:'Under POPI, the loss adjuster is classified as a/an...', opts:['Responsible party','Operator','Data subject','Regulator'], correct:1,
+        feedback:{ c:'Correct. The insurer is the responsible party; the adjuster is an operator.', w:'The loss adjuster is an "operator" under POPI.' } },
+      { q:'Does a loss adjuster need the insured&rsquo;s consent to investigate a claim?', opts:['Yes, always','No','Only for fraud','Only for buildings'], correct:1,
+        feedback:{ c:'Correct. The insured&rsquo;s consent is not required to investigate the claim.', w:'No &mdash; the insured&rsquo;s consent is not required to investigate.' } },
+      { q:'Reports containing personal information should be sent to...', opts:['Anyone involved','Only those who need to know','The public','The insured&rsquo;s family'], correct:1,
+        feedback:{ c:'Correct. Share on a strict need-to-know basis.', w:'Only those who need to know.' } }
+    ]
+  },
+  {
+    title: 'Section 7 — Principles of Insurance',
+    sub: 'General professional knowledge (no direct app section)',
+    blocks: [
+      { type:'h', text:'Insurable interest' },
+      { type:'list', title:'The concept', items:[
+        'It is not the property that is insured but the insured&rsquo;s <strong>pecuniary interest</strong> in it (Castellain v Preston)',
+        'Four essentials: insurable subject matter; it is the subject of the insurance; the insured benefits from its safety and is prejudiced by its loss; the relationship is recognised at law',
+        'South African courts lean in favour of finding an insurable interest (Lorcom)'
+      ]},
+      { type:'h', text:'Good faith' },
+      { type:'list', title:'Disclosure', items:[
+        'Insurance is a contract of good faith &mdash; SA law recognises <strong>no degrees</strong> of good faith (Mutual &amp; Federal v Oudtshoorn)',
+        'The insured must disclose <strong>material facts</strong>; a fact is material (objective, reasonable-person test) if it would influence a prudent insurer&rsquo;s decision to accept the risk or set the premium (s53 Short-Term Insurance Act)',
+        'The duty is reciprocal &mdash; it applies to insurer and insured'
+      ]},
+      { type:'h', text:'Proximate cause' },
+      { type:'list', title:'Causation', items:[
+        'The proximate cause is the <strong>dominant, direct, efficient</strong> cause (Pawsey v Scottish Union) &mdash; not necessarily first or last in time',
+        'Factual causation uses the <strong>"but for"</strong> test',
+        'Fire policies cover water and smoke damage from firefighting because the fire is the proximate cause'
+      ]},
+      { type:'h', text:'Subrogation & contribution' },
+      { type:'list', title:'Supporting indemnity', items:[
+        '<strong>Subrogation</strong> lets the insurer step into the insured&rsquo;s shoes to recover from a liable third party &mdash; so no one is paid twice; the insurer cannot profit',
+        'Ex gratia payments carry <strong>no</strong> subrogation rights',
+        '<strong>Contribution</strong> shares a loss between insurers when more than one policy covers it'
+      ]}
+    ],
+    practice: [
+      { q:'"It is not the bricks... but the interest of the insured that is insured" comes from which case?', opts:['Macaura','Castellain v Preston','Pawsey','Nafte'], correct:1,
+        feedback:{ c:'Correct. Castellain v Preston (1883).', w:'It is from Castellain v Preston.' } },
+      { q:'How many degrees of good faith does South African law recognise?', opts:['Three','Two','None','Five'], correct:2,
+        feedback:{ c:'Correct. There are no degrees &mdash; good faith or bad faith.', w:'None &mdash; SA law recognises no degrees of good faith.' } },
+      { q:'The proximate cause is best described as the ___ cause.', opts:['First','Dominant','Last','Excluded'], correct:1,
+        feedback:{ c:'Correct. The dominant, direct, efficient cause.', w:'It is the dominant (direct, efficient) cause.' } }
+    ]
+  },
+  {
+    title: 'Section 8 — Legal Framework & Professional Conduct',
+    sub: 'General professional knowledge (no direct app section)',
+    blocks: [
+      { type:'h', text:'Agency' },
+      { type:'list', title:'Acting for the insurer', items:[
+        'The adjuster acts under a <strong>mandate</strong> (contract of agency) as the insurer&rsquo;s agent &mdash; usually for the insurer, not the insured',
+        'An agent can bind the principal within their authority; a principal may be <strong>estopped</strong> from denying authority they appeared to give'
+      ]},
+      { type:'h', text:'Estoppel' },
+      { type:'list', title:'A shield, not a sword', items:[
+        'Estoppel is a <strong>defence</strong>, not a cause of action',
+        'A person who made a representation that another relied on to their prejudice may be precluded from denying its truth (United Fisheries v Silverman)'
+      ]},
+      { type:'h', text:'Delict & how subrogation arises' },
+      { type:'list', title:'Sources of recovery', items:[
+        'A <strong>delict</strong> is a civil wrong',
+        'Subrogation rights can arise out of <strong>delict</strong> (a wrongdoer&rsquo;s negligence), out of <strong>contract</strong> (e.g. a tenant&rsquo;s undertaking), or out of the <strong>subject matter</strong> (salvage)'
+      ]},
+      { type:'h', text:'Conduct & ethics' },
+      { type:'list', title:'Always', items:[
+        'Remain objective, fair and impartial; keep full control of the investigation',
+        'Never promise settlement to buy time, never lie (use &ldquo;I cannot comment on that&rdquo;), never be aggressive, never pay inducements'
+      ]}
+    ],
+    practice: [
+      { q:'Estoppel is described as a "shield, not a ___".', opts:['sword','wall','key','door'], correct:0,
+        feedback:{ c:'Correct. Estoppel is a defence (shield), not a cause of action (sword).', w:'A shield, not a sword.' } },
+      { q:'The loss adjuster usually acts as agent for the...', opts:['insured','insurer','broker','public'], correct:1,
+        feedback:{ c:'Correct. The adjuster is the insurer&rsquo;s agent under a mandate.', w:'For the insurer.' } },
+      { q:'Subrogation rights can arise out of delict, contract or...', opts:['estoppel','the subject matter (salvage)','average','agency'], correct:1,
+        feedback:{ c:'Correct. Delict, contract, or the subject matter of insurance (salvage).', w:'Out of the subject matter of insurance (salvage).' } }
+    ]
+  }
+];
+
+// Merge the manual-based sections into the single Loss Adjusting Course.
+// Sections 1-6 map to the app; 7-8 are general principles & law.
+(function mergeLaIntoCourse() {
+  const laMaps = ['App Section 1', 'App Section 2', 'App Section 3', 'App Section 4', 'App Section 5', 'App Section 6', 'General Knowledge', 'General Knowledge'];
+  laSections.forEach((s, i) => {
+    courseModules.push({
+      cat: i < 6 ? 'Loss Adjusting Manual — Mapped to the App' : 'Loss Adjusting Manual — Principles & Law',
+      title: s.title.replace(/^Section\s*\d+\s*[—-]\s*/, ''),
+      sub: s.sub,
+      map: laMaps[i] || 'General Knowledge',
+      blocks: s.blocks,
+      phone: s.phone,
+      quiz: s.practice
+    });
+  });
+})();
+
+
+// ════════════════════════════════════════════════
+//  FORMAL ASSESSMENT  (100 marks)
+//  All questions drawn from the manual.
+// ════════════════════════════════════════════════
+const ASSESS = {
+  tf: [
+    { q:'The loss adjuster is the agent of the insurer.', a:true },
+    { q:'The loss adjuster, not the insurer, makes the final decision to repudiate a claim.', a:false },
+    { q:'An indemnity insurance policy is a contract of indemnity and indemnity only.', a:true },
+    { q:'Under South African law there are several degrees of good faith.', a:false },
+    { q:'A fact is material if it would influence a prudent insurer&rsquo;s assessment of the risk or premium.', a:true },
+    { q:'The proximate cause must always be the last event in time before the loss.', a:false },
+    { q:'Subrogation allows an insurer to recover more than it paid out and make a profit.', a:false },
+    { q:'Life assurance is a contract of indemnity.', a:false },
+    { q:'The insured must prove ownership or insurable interest in the item claimed.', a:true },
+    { q:'A loss adjuster may formulate the claim on the insured&rsquo;s behalf.', a:false },
+    { q:'Under POPI a loss adjuster needs the insured&rsquo;s consent before investigating a claim.', a:false },
+    { q:'Estoppel can be used as a defence (a shield) but not as an independent cause of action.', a:true },
+    { q:'Indemnity is measured by the value of the property at the date of the loss, not its original cost.', a:true },
+    { q:'If a property is underinsured, the condition of average reduces the claim proportionally.', a:true },
+    { q:'An interim payment may be made before the insured has actually incurred the expenditure.', a:false },
+    { q:'Where an insured is fully indemnified for a total loss, they may also keep the salvage.', a:false },
+    { q:'Photographs, signed statements and documentation are examples of "hard" evidence.', a:true },
+    { q:'The duty of good faith in insurance is reciprocal &mdash; it applies to both insurer and insured.', a:true },
+    { q:'An ex gratia payment gives the insurer full subrogation rights.', a:false },
+    { q:'The option to reinstate (rebuild) generally belongs to the insurer, not the insured.', a:true }
+  ],
+  mcq: [
+    { q:'The controlling principle of insurance law is:', opts:['Indemnity','Subrogation','Contribution','Average'], correct:0 },
+    { q:'"It is not the bricks... but the interest of the insured" comes from which case?', opts:['Castellain v Preston','Macaura v Northern Assurance','Pawsey v Scottish Union','Nafte v Atlas'], correct:0 },
+    { q:'Which is NOT one of the four methods of providing indemnity?', opts:['Cash','Repair','Replacement','Depreciation'], correct:3 },
+    { q:'The "but for" test is used to determine:', opts:['Factual causation','Materiality','Insurable interest','Betterment'], correct:0 },
+    { q:'Proximate cause is best described as the cause that is:', opts:['First in time','Dominant and efficient','Least direct','Always excluded'], correct:1 },
+    { q:'Under POPI, a loss adjuster is classified as a/an:', opts:['Responsible party','Data subject','Operator','Regulator'], correct:2 },
+    { q:'The four stages of handling a claim are investigation, policy liability, quantum and:', opts:['Litigation','Negotiation &amp; settlement','Reinsurance','Underwriting'], correct:1 },
+    { q:'Subrogation rights arise out of delict, the subject matter of insurance, and:', opts:['Estoppel','Contract','Agency','Average'], correct:1 },
+    { q:'The test for whether a fact is "material" is:', opts:['Subjective to the insured','The reasonable (prudent) person','Decided by the broker','The largest sum insured'], correct:1 },
+    { q:'Which type of policy is NOT a contract of indemnity?', opts:['Fire','Motor','Life assurance','Property'], correct:2 }
+  ],
+  short: [
+    { q:'Whose agent is the loss adjuster?', keywords:['insurer','underwriter'] },
+    { q:'Name one of the four stages of the claims handling process.', keywords:['investigation','policy liability','liability','quantum','negotiation','settlement'] },
+    { q:'What principle places the insured in the same financial position after a loss as before it?', keywords:['indemnity'] },
+    { q:'Name one of the four methods of providing indemnity.', keywords:['cash','repair','replacement','reinstatement'] },
+    { q:'What condition applies when a property is underinsured?', keywords:['average'] },
+    { q:'What is the insurer&rsquo;s right to step into the insured&rsquo;s shoes and recover from a third party called?', keywords:['subrogation'] },
+    { q:'What allows more than one insurer to share a loss when several policies cover it?', keywords:['contribution'] },
+    { q:'What must the insured prove about an item claimed for?', keywords:['ownership','insurable interest','interest'] },
+    { q:'Name the category of evidence that includes photographs, statements and documents.', keywords:['hard'] },
+    { q:'Name the case that established that it is the interest of the insured that is insured.', keywords:['castellain','preston'] },
+    { q:'The proximate cause is the ___ cause (give one word).', keywords:['dominant','direct','efficient','operative','proximate'] },
+    { q:'Under POPI, what is the insurer called?', keywords:['responsible party','responsible'] },
+    { q:'Under POPI, what is the loss adjuster called?', keywords:['operator'] },
+    { q:'Who makes the final decision to repudiate a claim?', keywords:['insurer','underwriter'] },
+    { q:'What is it called when an insured profits or gets something better than before the loss?', keywords:['betterment'] },
+    { q:'What test determines factual causation?', keywords:['but for'] },
+    { q:'Indemnity value is based on the value at the date of the ___.', keywords:['loss'] },
+    { q:'How many degrees of good faith does South African law recognise?', keywords:['none','no','zero','nil'] },
+    { q:'Estoppel is a shield, not a ___.', keywords:['sword'] },
+    { q:'A report is made privileged when prepared in contemplation of ___.', keywords:['litigation'] },
+    { q:'Name one thing an adjuster should never do to a witness or insured.', keywords:['lie','aggressive','inducement','promise','lead','abusive'] },
+    { q:'What must be in force for the value of an interim payment?', keywords:['cover','insurance','policy'] },
+    { q:'When insurers sell damaged stock or vehicles they exercise which right?', keywords:['subrogation'] },
+    { q:'A delict is a civil ___.', keywords:['wrong'] },
+    { q:'What is the contract between the loss adjuster and the insurer called?', keywords:['mandate','agency'] },
+    { q:'Name one factor that limits the payment of indemnity.', keywords:['average','excess','deductible','sum insured','betterment','wear'] },
+    { q:'Besides the insured, who else does the reciprocal duty of good faith apply to?', keywords:['insurer','underwriter'] },
+    { q:'A cause that is excluded from the policy is known as an ___ peril.', keywords:['excepted','excluded'] },
+    { q:'Whose consent is NOT required for the adjuster to investigate a claim?', keywords:['insured'] },
+    { q:'Name one of the three ways subrogation rights arise.', keywords:['delict','contract','subject matter','salvage'] }
+  ],
+  long: [
+    { q:'Explain the principle of indemnity and the methods by which insurers may provide it. (8 marks)', marks:8,
+      model:'Indemnity is the controlling principle of insurance (Castellain v Preston). It places the insured in the same financial position after the loss as immediately before it &mdash; no more and no less, so the insured may not profit. It is provided by cash payment, repair, replacement or reinstatement. Property value is measured at the date of the loss (not original cost), less wear and tear and any betterment.',
+      concepts:[ {any:['same financial position','same position','position before','before the loss']}, {any:['no more','not profit','no profit','not exceed','full indemnity']}, {any:['castellain','controlling principle','foundation']}, {any:['cash']}, {any:['repair']}, {any:['replacement','replace']}, {any:['reinstatement','reinstate','rebuild']}, {any:['date of the loss','not cost','wear and tear','betterment','value at']} ] },
+    { q:'Describe the four stages of the claims handling process and the role of the loss adjuster within it. (8 marks)', marks:8,
+      model:'The four stages are: investigation of the circumstances; determination of policy liability; investigation and confirmation of quantum; and negotiation and settlement. The adjuster is the insurer&rsquo;s agent and acts as an impartial claims auditor and facilitator who gathers and verifies evidence and facts, reports to insurers in a balanced way, and recommends &mdash; while the insurer makes the decision to accept or repudiate.',
+      concepts:[ {any:['investigation','circumstances']}, {any:['policy liability','liability']}, {any:['quantum']}, {any:['negotiation','settlement']}, {any:['agent','insurer','auditor','facilitator']}, {any:['evidence','facts','verify','gather']}, {any:['recommend','insurer decides','insurer makes','report']}, {any:['impartial','objective','balanced','fair']} ] },
+    { q:'Explain subrogation and contribution, and how each supports the principle of indemnity. (8 marks)', marks:8,
+      model:'Subrogation allows the insurer, having indemnified the insured, to step into the insured&rsquo;s shoes and recover the loss from a liable third party. It prevents the insured being paid twice and the insurer may not profit (recovery is limited to what it paid); ex gratia payments carry no subrogation rights. It arises out of delict, contract, or the subject matter (salvage). Contribution applies where more than one policy covers the same loss, so insurers share the loss proportionately rather than it falling on one. Both uphold indemnity by ensuring no double recovery.',
+      concepts:[ {any:['step into','shoes','stand in the place']}, {any:['third party','recover','wrongdoer']}, {any:['paid twice','double','no more than','not profit','prevent']}, {any:['limited to','amount paid','cannot recover more']}, {any:['ex gratia']}, {any:['delict','contract','subject matter','salvage']}, {any:['more than one policy','more than one insurer','several','dual']}, {any:['share','proportion','contribute']} ] },
+    { q:'Explain the duty of good faith in insurance and what makes a fact "material". (6 marks)', marks:6,
+      model:'Insurance is a contract of good faith and the duty is reciprocal, applying to both insurer and insured. South African law recognises no degrees of good faith. The insured has a duty to disclose material facts. A fact is material if a reasonable, prudent person would consider it should be disclosed because it would influence the insurer&rsquo;s assessment of the risk or the premium (an objective test, s53 Short-Term Insurance Act). Material non-disclosure or misrepresentation makes the policy voidable at the insurer&rsquo;s instance.',
+      concepts:[ {any:['reciprocal','both parties','insurer and insured']}, {any:['no degrees','good faith','contract of good faith']}, {any:['disclose','disclosure','material fact']}, {any:['influence','risk','premium','assessment']}, {any:['reasonable','prudent','objective']}, {any:['voidable','avoid','non-disclosure','misrepresentation','section 53']} ] }
+  ]
+};
+
+let assessState = null;
+function shuffle(arr) { const a = arr.slice(); for (let i = a.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+
+function openAssessment() {
+  assessState = null;
+  const ov = document.getElementById('assessment-overlay');
+  ov.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  const prefill = (SESSION && SESSION.name) ? SESSION.name : '';
+  document.getElementById('assessment-content').innerHTML = `
+    <div class="assess-head">
+      <h2>📝 Loss Adjustor Formal Assessment</h2>
+      <p>100 marks &middot; Pass mark 60%. Sections: 20 True/False (20), 10 Multiple Choice (20), 30 Short Answer (30) and 4 Long Answer (30). There is no time limit &mdash; answer carefully and in your own words where asked. Questions are drawn from the Principles and Practice of Loss Adjusting manual and appear in a random order.</p>
+    </div>
+    <div class="assess-q">
+      <div class="qt">Enter your full name to begin. Your result will be saved against this name.</div>
+      <input class="assess-input" id="assess-name" placeholder="Full name" value="${prefill.replace(/"/g,'&quot;')}">
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="take-assess-btn" onclick="startAssessment()">Begin Assessment</button>
+        <button class="nav-btn" onclick="closeAssessment()">Cancel</button>
+      </div>
+    </div>`;
+  setTimeout(() => { const el = document.getElementById('assess-name'); if (el) el.focus(); }, 100);
+}
+function closeAssessment() {
+  document.getElementById('assessment-overlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function startAssessment() {
+  const name = document.getElementById('assess-name').value.trim();
+  if (!name) { alert('Please enter your full name to begin.'); return; }
+  assessState = {
+    name: name,
+    tf: shuffle(ASSESS.tf),
+    mcq: shuffle(ASSESS.mcq),
+    short: shuffle(ASSESS.short),
+    long: shuffle(ASSESS.long)
+  };
+  renderAssessmentForm();
+}
+
+function renderAssessmentForm() {
+  let h = `<div class="assess-head"><h2>📝 Assessment in progress</h2><p>Candidate: <strong>${assessState.name}</strong> &middot; 100 marks &middot; pass 60%. Answer every question, then submit at the bottom.</p></div>`;
+
+  h += `<div class="assess-section-title">Section A &mdash; True / False</div><div class="assess-section-sub">20 questions &middot; 1 mark each</div>`;
+  assessState.tf.forEach((q, i) => {
+    h += `<div class="assess-q"><div class="qn">A${i+1} &middot; 1 mark</div><div class="qt">${q.q}</div>
+      <label class="assess-opt"><input type="radio" name="tf-${i}" value="true"> True</label>
+      <label class="assess-opt"><input type="radio" name="tf-${i}" value="false"> False</label></div>`;
+  });
+
+  h += `<div class="assess-section-title">Section B &mdash; Multiple Choice</div><div class="assess-section-sub">10 questions &middot; 2 marks each</div>`;
+  assessState.mcq.forEach((q, i) => {
+    h += `<div class="assess-q"><div class="qn">B${i+1} &middot; 2 marks</div><div class="qt">${q.q}</div>`;
+    q.opts.forEach((opt, oi) => { h += `<label class="assess-opt"><input type="radio" name="mcq-${i}" value="${oi}"> ${opt}</label>`; });
+    h += `</div>`;
+  });
+
+  h += `<div class="assess-section-title">Section C &mdash; Short Answer</div><div class="assess-section-sub">30 questions &middot; 1 mark each &middot; a word or short phrase is enough</div>`;
+  assessState.short.forEach((q, i) => {
+    h += `<div class="assess-q"><div class="qn">C${i+1} &middot; 1 mark</div><div class="qt">${q.q}</div><input class="assess-input" id="short-${i}" placeholder="Your answer"></div>`;
+  });
+
+  h += `<div class="assess-section-title">Section D &mdash; Long Answer</div><div class="assess-section-sub">4 questions &middot; 30 marks total &middot; marked on the concepts you cover</div>`;
+  assessState.long.forEach((q, i) => {
+    h += `<div class="assess-q"><div class="qn">D${i+1} &middot; ${q.marks} marks</div><div class="qt">${q.q}</div><textarea class="assess-textarea" id="long-${i}" placeholder="Write your answer..."></textarea></div>`;
+  });
+
+  h += `<div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
+    <button class="take-assess-btn" onclick="submitAssessment()">Submit Assessment</button>
+    <button class="nav-btn" onclick="closeAssessment()">Cancel</button>
+  </div>`;
+
+  document.getElementById('assessment-content').innerHTML = h;
+  window.scrollTo({ top: 0 });
+}
+
+function normAns(s) { return (s || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim(); }
+function markShort(ans, keywords) { const n = normAns(ans); if (!n) return false; return keywords.some(k => n.indexOf(normAns(k)) !== -1); }
+function markLong(ans, concepts, marks) {
+  const n = normAns(ans);
+  if (!n) return 0;
+  let matched = 0;
+  concepts.forEach(c => { if (c.any.some(k => n.indexOf(normAns(k)) !== -1)) matched++; });
+  return Math.round((matched / concepts.length) * marks);
+}
+
+function submitAssessment() {
+  const review = { tf: [], mcq: [], short: [], long: [] };
+  let tfScore = 0, mcqScore = 0, shortScore = 0, longScore = 0;
+
+  assessState.tf.forEach((q, i) => {
+    const sel = document.querySelector(`input[name="tf-${i}"]:checked`);
+    const ansBool = sel ? (sel.value === 'true') : null;
+    const ok = ansBool === q.a;
+    if (ok) tfScore++;
+    review.tf.push({ q: q.q, your: sel ? (ansBool ? 'True' : 'False') : '(no answer)', correct: q.a ? 'True' : 'False', ok });
+  });
+  assessState.mcq.forEach((q, i) => {
+    const sel = document.querySelector(`input[name="mcq-${i}"]:checked`);
+    const ansIdx = sel ? parseInt(sel.value, 10) : -1;
+    const ok = ansIdx === q.correct;
+    if (ok) mcqScore += 2;
+    review.mcq.push({ q: q.q, your: ansIdx >= 0 ? q.opts[ansIdx] : '(no answer)', correct: q.opts[q.correct], ok });
+  });
+  assessState.short.forEach((q, i) => {
+    const val = (document.getElementById('short-' + i) || {}).value || '';
+    const ok = markShort(val, q.keywords);
+    if (ok) shortScore++;
+    review.short.push({ q: q.q, your: val || '(no answer)', correct: q.keywords[0], ok });
+  });
+  assessState.long.forEach((q, i) => {
+    const val = (document.getElementById('long-' + i) || {}).value || '';
+    const got = markLong(val, q.concepts, q.marks);
+    longScore += got;
+    review.long.push({ q: q.q, your: val || '(no answer)', got, marks: q.marks, model: q.model });
+  });
+
+  const total = tfScore + mcqScore + shortScore + longScore;
+  const pass = total >= 60;
+  const result = {
+    name: assessState.name,
+    date: new Date().toISOString(),
+    tf: tfScore, mcq: mcqScore, short: shortScore, long: longScore,
+    total, pass
+  };
+  saveAssessmentResult(result);
+  renderAssessmentResults(result, review);
+}
+
+function renderAssessmentResults(r, review) {
+  const reviewBlock = (title, items, renderer) => `<div class="assess-section-title">${title}</div>` + items.map(renderer).join('');
+  let h = `
+    <div class="assess-head" style="text-align:center">
+      <div class="result-score">${r.total}/100</div>
+      <div style="margin:10px 0"><span class="result-badge ${r.pass?'pass':'fail'}">${r.pass ? '✓ PASS' : '✗ FAIL'}</span></div>
+      <p>Candidate: <strong>${r.name}</strong> &middot; Pass mark 60%</p>
+    </div>
+    <div class="admin-section">
+      <h3>Score breakdown</h3>
+      <table class="admin-table">
+        <tbody>
+          <tr><td>Section A &mdash; True / False</td><td style="text-align:right">${r.tf} / 20</td></tr>
+          <tr><td>Section B &mdash; Multiple Choice</td><td style="text-align:right">${r.mcq} / 20</td></tr>
+          <tr><td>Section C &mdash; Short Answer</td><td style="text-align:right">${r.short} / 30</td></tr>
+          <tr><td>Section D &mdash; Long Answer</td><td style="text-align:right">${r.long} / 30</td></tr>
+          <tr><td><strong>Total</strong></td><td style="text-align:right"><strong>${r.total} / 100</strong></td></tr>
+        </tbody>
+      </table>
+    </div>`;
+
+  h += reviewBlock('Section A &mdash; review', review.tf, it => `<div class="rev-item">${it.q}<br>Your answer: <span class="${it.ok?'rev-correct':'rev-wrong'}">${it.your}</span> &middot; Correct: <span class="rev-correct">${it.correct}</span></div>`);
+  h += reviewBlock('Section B &mdash; review', review.mcq, it => `<div class="rev-item">${it.q}<br>Your answer: <span class="${it.ok?'rev-correct':'rev-wrong'}">${it.your}</span> &middot; Correct: <span class="rev-correct">${it.correct}</span></div>`);
+  h += reviewBlock('Section C &mdash; review', review.short, it => `<div class="rev-item">${it.q}<br>Your answer: <span class="${it.ok?'rev-correct':'rev-wrong'}">${it.your}</span> ${it.ok?'<span class="rev-correct">✓</span>':'<span class="rev-wrong">✗ &middot; expected e.g. "'+it.correct+'"</span>'}</div>`);
+  h += reviewBlock('Section D &mdash; review', review.long, it => `<div class="rev-item">${it.q}<br><strong>Awarded: ${it.got} / ${it.marks}</strong><br>Your answer: <em>${(it.your||'').replace(/</g,'&lt;')}</em><br><span style="color:var(--gray-500)">Model answer: ${it.model}</span></div>`);
+
+  h += `<div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
+    <button class="nav-btn primary" onclick="closeAssessment()">Done</button>
+    <button class="nav-btn" onclick="openResultsAdmin()">View all results</button>
+  </div>`;
+
+  document.getElementById('assessment-content').innerHTML = h;
+  window.scrollTo({ top: 0 });
+}
+
+// ── RESULTS STORAGE & ADMIN ──
+function loadAssessmentResults() { try { return JSON.parse(localStorage.getItem('uclaim_assessment_results') || '[]'); } catch(e) { return []; } }
+function saveAssessmentResult(r) { const all = loadAssessmentResults(); all.push(r); localStorage.setItem('uclaim_assessment_results', JSON.stringify(all)); }
+
+function openResultsAdmin() {
+  document.getElementById('results-overlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  renderResultsAdmin();
+}
+function closeResults() {
+  document.getElementById('results-overlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+function renderResultsAdmin() {
+  const results = loadAssessmentResults().slice().sort((a, b) => (a.date < b.date ? 1 : -1));
+  const rows = results.length ? results.map((r, i) => {
+    const d = new Date(r.date);
+    const ds = isNaN(d) ? r.date : d.toLocaleString();
+    return `<tr>
+      <td>${r.name}</td>
+      <td>${ds}</td>
+      <td style="text-align:right">${r.total}/100</td>
+      <td><span class="result-badge ${r.pass?'pass':'fail'}" style="font-size:11px;padding:3px 10px">${r.pass?'PASS':'FAIL'}</span></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="4" style="color:var(--gray-500)">No assessment results yet.</td></tr>`;
+
+  document.getElementById('results-content').innerHTML = `
+    <div class="assess-head">
+      <h2>📊 Assessment Results &mdash; Admin</h2>
+      <p>All saved Loss Adjustor assessment results on this device. For the administrator (Maximillian Hornby, max@cmsupport.co.za).</p>
+    </div>
+    <div class="admin-section">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+        <h3 style="margin:0">Results (${results.length})</h3>
+        <div style="display:flex;gap:8px">
+          <button class="take-assess-btn" style="padding:9px 16px;font-size:13px" onclick="exportResultsCSV()">⬇ Export Results (CSV)</button>
+          <button class="nav-btn" onclick="closeResults()">Close</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Date &amp; time</th><th style="text-align:right">Score</th><th>Result</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <p style="font-size:12px;color:var(--gray-500);margin-top:12px">Pass mark 60%. Results are stored in this browser&rsquo;s local storage on this device.</p>
+    </div>`;
+}
+function exportResultsCSV() {
+  const results = loadAssessmentResults();
+  const esc = v => '"' + String(v).replace(/"/g, '""') + '"';
+  let csv = ['Name,Date,True/False (20),Multiple Choice (20),Short (30),Long (30),Total (100),Result'].join('') + '\n';
+  results.forEach(r => {
+    csv += [esc(r.name), esc(r.date), r.tf, r.mcq, r.short, r.long, r.total, esc(r.pass ? 'PASS' : 'FAIL')].join(',') + '\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'uclaim-assessment-results.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 // ── INIT ──
