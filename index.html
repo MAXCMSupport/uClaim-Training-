@@ -263,19 +263,20 @@ body {
   margin-bottom: 16px;
 }
 .field-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  position: relative;
+  padding-left: 16px;
   font-size: 13.5px;
   color: var(--gray-700);
+  line-height: 1.6;
 }
 .field-list li::before {
   content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
   width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--blue);
-  margin-top: 7px;
-  flex-shrink: 0;
 }
 .field-group {
   background: var(--gray-50);
