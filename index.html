@@ -3036,6 +3036,14 @@ let SESSION = null;
 
 function loadUsers() { try { return JSON.parse(localStorage.getItem('uclaim_users') || '{}'); } catch(e) { return {}; } }
 function saveUsers(u) { localStorage.setItem('uclaim_users', JSON.stringify(u)); }
+// Find the stored username key matching the typed value, ignoring case and surrounding spaces.
+function findUserKey(typed) {
+  const u = loadUsers();
+  const t = (typed || '').trim();
+  if (u[t]) return t;
+  const lower = t.toLowerCase();
+  return Object.keys(u).find(k => k.toLowerCase() === lower) || null;
+}
 function seedUsers() {
   const u = loadUsers();
   let changed = false;
@@ -3053,12 +3061,13 @@ function attemptLogin() {
   const pw = document.getElementById('login-pass').value;
   const u = loadUsers();
   const err = document.getElementById('login-error');
-  if (!un || !u[un] || u[un].password !== pw) {
+  const key = findUserKey(un);
+  if (!key || u[key].password !== pw) {
     err.textContent = 'Incorrect username or password.';
     err.style.display = 'block';
     return;
   }
-  SESSION = { username: un, role: u[un].role, name: u[un].name };
+  SESSION = { username: key, role: u[key].role, name: u[key].name };
   saveSession(SESSION);
   err.style.display = 'none';
   document.getElementById('login-pass').value = '';
@@ -3293,7 +3302,7 @@ function adminCreateUser() {
   const role = document.getElementById('new-role').value;
   if (!name || !un || !pw) { adminMsg('Please fill in name, username and password.', false); return; }
   const u = loadUsers();
-  if (u[un]) { adminMsg('That username already exists.', false); return; }
+  if (findUserKey(un)) { adminMsg('That username already exists (usernames are not case-sensitive).', false); return; }
   u[un] = { password: pw, role: role, name: name };
   saveUsers(u);
   renderAdmin();
