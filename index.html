@@ -1555,8 +1555,6 @@ function buildSection2() {
               <li>Building Type</li>
               <li>Roof Type</li>
               <li>Building Use</li>
-              <li>Building Size (m²)</li>
-              <li>Security</li>
               <li>Building Condition</li>
               <li>Short description of existing building</li>
               <li>Is there damage to the building? (Yes / No)</li>
@@ -1578,12 +1576,22 @@ function buildSection2() {
                 <option>Select type...</option><option>Warehouse</option><option>Office</option><option>Residential</option><option>Retail</option><option>Industrial</option>
               </select></div>
             </div>
-            <div class="phone-field"><label>Building Size (m²)</label><input class="phone-input" type="number" placeholder="0" onclick="this.style.borderColor='#4A90C4'"></div>
+            <div class="phone-field"><label>Roof Type</label>
+              <div class="phone-select-wrap"><select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                <option>Select...</option><option>Concrete Slab</option><option>IBR</option><option>Concrete Tiles</option><option>Thatch</option><option>Other</option>
+              </select></div>
+            </div>
+            <div class="phone-field"><label>Building Use</label>
+              <div class="phone-select-wrap"><select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
+                <option>Select...</option><option>Commercial</option><option>Residential</option><option>Industrial</option><option>Agricultural</option><option>Other</option>
+              </select></div>
+            </div>
             <div class="phone-field"><label>Building Condition</label>
               <div class="phone-select-wrap"><select class="phone-select" onchange="this.style.borderColor='#4A90C4'">
                 <option>Select...</option><option>Good</option><option>Fair</option><option>Poor</option>
               </select></div>
             </div>
+            <div class="phone-field"><label>Short Description</label><textarea class="phone-textarea" placeholder="Describe existing building..."></textarea></div>
             <div class="phone-field"><label>Damage to Building?</label>
               <div class="phone-yn-btns">
                 <button class="phone-yn-btn yes" onclick="this.classList.add('active'); this.nextElementSibling.classList.remove('active')">Yes</button>
@@ -1960,13 +1968,22 @@ function buildSection5() {
               <li><strong>Entrance Type</strong> — Manual Sliding Gate, Motorised Sliding Gate, Open Entrance, Boom Gates, Other</li>
               <li><strong>Security</strong> (select all that apply) — Electric Fencing, Access Control, Perimeter CCTV, Razor Wire, None</li>
               <li><strong>Perimeter Value Range</strong> — Lower, Middle, Upper, Executive</li>
-              <li><strong>Perimeter m²</strong></li>
+              <li><strong>Perimeter Length (m)</strong></li>
               <li><strong>Layout of Yard</strong></li>
               <li><strong>Short Description of existing perimeter</strong></li>
               <li>Photos, Videos &amp; Voice Notes</li>
             </ul>
           </div>
-          <div class="tip">💡 The <strong>Value Range</strong> (Lower / Middle / Upper / Executive) tells the VAR Indicator the quality bracket of the build — pick the one that best reflects the finishes and standard you see on site.</div>
+          <div class="tip">💡 The <strong>Value Range</strong> (Lower / Middle / Upper / Executive) tells the VAR Indicator the quality bracket of the build — pick the one that best reflects the standard you see on site. Grade on the <strong>dominant standard</strong> (quality, not size — the length/size fields capture size).</div>
+          <div class="field-group">
+            <div class="field-group-title">How to classify the Perimeter Value Range</div>
+            <ul class="field-list">
+              <li><strong>Lower</strong> — Open street front or a basic wire / diamond-mesh fence; little or no security.</li>
+              <li><strong>Middle</strong> — Pre-cast concrete walling or standard palisade, with a manual gate.</li>
+              <li><strong>Upper</strong> — Face-brick or plastered boundary wall, or palisade with some security (CCTV / beams) and a motorised gate.</li>
+              <li><strong>Executive</strong> — High clad or landscaped walls, electric fencing, an automated boom or sliding gate, and full CCTV / access control.</li>
+            </ul>
+          </div>
         </div>
         ${phoneFrame(`
           <div class="phone-app-bar"><h4>VAR Property</h4><p>Step 1 — Perimeter</p></div>
@@ -1995,7 +2012,7 @@ function buildSection5() {
               <div class="phone-field"><label>Perimeter Value Range</label>
                 <div class="phone-select-wrap"><select class="phone-select"><option>Select...</option><option>Lower</option><option>Middle</option><option>Upper</option><option>Executive</option></select></div>
               </div>
-              <div class="phone-field"><label>Perimeter m²</label><input class="phone-input" placeholder="e.g. 1 200" onclick="this.style.borderColor='#4A90C4'"></div>
+              <div class="phone-field"><label>Perimeter Length (m)</label><input class="phone-input" placeholder="e.g. 180" onclick="this.style.borderColor='#4A90C4'"></div>
               <div class="phone-field"><label>Layout of Yard</label><textarea class="phone-textarea" placeholder="Describe the yard layout..."></textarea></div>
               <div class="phone-field"><label>Short Description</label><textarea class="phone-textarea" placeholder="Describe existing perimeter..."></textarea></div>
               <div class="phone-field"><label>Media</label>
@@ -2045,6 +2062,15 @@ function buildSection5() {
               <li><strong>Building Value Range</strong> — Lower, Middle, Upper, Executive</li>
               <li><strong>Short Description</strong></li>
               <li>Photos, Videos &amp; Voice Notes</li>
+            </ul>
+          </div>
+          <div class="field-group">
+            <div class="field-group-title">How to classify the Building Value Range</div>
+            <ul class="field-list">
+              <li><strong>Lower</strong> — Entry-level / economic build: face brick or plaster &amp; paint, screed or basic vinyl floors, basic fittings, IBR or basic roof sheeting, minimal detailing.</li>
+              <li><strong>Middle</strong> — Standard build: brick &amp; plaster, tiled floors, melamine kitchen with laminate tops, standard sanitaryware, concrete-tile roof, plastered ceilings with cornices.</li>
+              <li><strong>Upper</strong> — Above-standard: porcelain / large-format tiles or laminated timber floors, granite or Caesarstone tops, quality appliances, multiple en-suite bathrooms, feature lighting, better roof (concrete tile / slate).</li>
+              <li><strong>Executive</strong> — Luxury / premium, often architect-designed: imported or natural stone, solid timber, designer kitchen with island &amp; butler&rsquo;s pantry, frameless glass, smart-home features, double-volume spaces, specialist roofing.</li>
             </ul>
           </div>
           <div class="callout">
@@ -2726,7 +2752,7 @@ const courseModules = [
       { type:'list', title:'Step 1 — Perimeter captures', items:[
         'Perimeter Type, Entrance Type and Security',
         'Perimeter Value Range &mdash; Lower, Middle, Upper or Executive',
-        'Perimeter m&sup2; and Layout of Yard',
+        'Perimeter length (m) and Layout of Yard',
         'Short description, plus Photos, Videos &amp; Voice Notes'
       ]},
       { type:'list', title:'Step 2 — Areas capture', items:[
